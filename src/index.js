@@ -9,7 +9,7 @@ const redisClient = require("./config/redis")
 app.use(express.json());
 app.use(cookieParser())
 
-app.use("/auth", authRouter)
+app.use("/user", authRouter)
 
 
 const IntializeConnection = async () => {
