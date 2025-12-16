@@ -37,9 +37,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+     resetPasswordToken: {
+        type: String
+    },
     resetPasswordExpire: {
         type: Date
     },
+    
 
     problemSolved: {
         type: [String],

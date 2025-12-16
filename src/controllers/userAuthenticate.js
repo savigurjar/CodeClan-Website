@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken")
 const redisClient = require("../config/redis")
 const crypto = require("crypto");
 // const Submission = require("../models/Submission")
+const nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
     try {
@@ -191,7 +192,7 @@ const forgetPassword = async (req, res) => {
             .update(resetToken)
             .digest("hex");
 
-       people.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
+        people.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
 
 
         await people.save();
@@ -199,8 +200,8 @@ const forgetPassword = async (req, res) => {
         // send email here
         console.log(`Reset URL: http://localhost:3000/reset-password/${resetToken}`);
         console.log("RAW TOKEN:", resetToken);
-console.log("HASHED TOKEN:", people.resetPasswordToken);
-console.log("EXPIRES AT:", people.resetPasswordExpire);
+        console.log("HASHED TOKEN:", people.resetPasswordToken);
+        console.log("EXPIRES AT:", people.resetPasswordExpire);
 
 
         res.status(200).send("Reset password link sent to email");
@@ -245,7 +246,36 @@ const resetPassword = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        // Pagination query params (default: page 1, limit 10)
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Find users excluding password and reset token fields
+        const users = await User.find({}, '-password -resetPasswordToken -resetPasswordExpire')
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 }); // latest users first
+
+        const totalUsers = await User.countDocuments();
+
+        res.status(200).json({
+            success: true,
+            page,
+            limit,
+            totalUsers,
+            totalPages: Math.ceil(totalUsers / limit),
+            users
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
 
 
 
-module.exports = { register, login, getProfile, logout, adminRegister, deleteProfile, changePassword ,forgetPassword ,resetPassword}
+
+
+module.exports = { register, login, getProfile, logout, adminRegister, deleteProfile, changePassword, forgetPassword, resetPassword ,getAllUsers}
