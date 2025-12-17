@@ -3,12 +3,11 @@ const problemRouter = express.Router();
 const adminMiddleware = require("../middleware/adminMiddleware")
 
 // create 
-problemRouter.post("/create",adminMiddleware, createProblem)
-
+problemRouter.post("/create", adminMiddleware, createProblem)
 // update
-problemRouter.patch("/:id",adminMiddleware, updateProblem)
+problemRouter.patch("/:id", adminMiddleware, updateProblem)
 // delete
-problemRouter.delete("/:id",adminMiddleware, deleteProblem)
+problemRouter.delete("/:id", adminMiddleware, deleteProblem)
 
 
 // fetch

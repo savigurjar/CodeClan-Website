@@ -18,7 +18,7 @@ const problemSchema = new Schema(
             required: true
         },
         tags: {
-            type: [String],
+            type: String,
             enum: [
                 "array",
                 "string",
@@ -47,46 +47,53 @@ const problemSchema = new Schema(
             required: true
 
         },
-        visibleTestCases: [
-            {
-                input: {
-                    type: String,
-                    required: true
-                },
-                output: {
-                    type: String,
-                    required: true
-                },
-                explanation: {
-                    type: String,
-                    required: true
-                }
+        visibleTestCases: [{
+            input: {
+                type: String,
+                required: true
+            },
+            output: {
+                type: String,
+                required: true
+            },
+            explanation: {
+                type: String,
+                required: true
             }
-        ],
-        HiddenTestCases: [
-            {
-                input: {
-                    type: String,
-                    required: true
-                },
-                output: {
-                    type: String,
-                    required: true
-                },
+        }],
+        hiddenTestCases: [{
+            input: {
+                type: String,
+                required: true
+            },
+            output: {
+                type: String,
+                required: true
+            },
 
-            }
-        ],
-        startCode: {
+        }],
+        startCode: [{
             language: {
                 type: String,
-                enum: ["javascript", "python", "java", "cpp"],
                 required: true
             },
             initialCode: {
                 type: String,
                 required: true
             }
-        },
+        }],
+        referenceSolution: [
+            {
+                language: {
+                    type: String,
+                    required: true
+                },
+                completeCode: {
+                    type: String,
+                    required: true
+                }
+            }
+        ],
 
         constraints: {
             type: [String],
@@ -111,12 +118,15 @@ const problemSchema = new Schema(
         },
         likes: {
             type: Number,
-            default: 0
+            default: 0,
+            min: 0
         },
         dislikes: {
             type: Number,
-            default: 0
-        },
+            default: 0,
+            min: 0
+        }
+        ,
         companies: {
             type: [String],
             default: []
