@@ -1,5 +1,5 @@
 const Problem = require('../models/problem')
-const { getLanguageById } = require("../utils/problemUtility")
+const { getLanguageById ,submitBatch} = require("../utils/problemUtility")
 const createProblem = async (req, res) => {
 
     const {
@@ -29,12 +29,22 @@ const createProblem = async (req, res) => {
             // stdin:
             // expectedOutput
 
-            const languageId = getLanguageById(language) 
+            const languageId = getLanguageById(language)
 
+            //   create batch all testcases 
+            const submissions = visibleTestCases.map((input, output) => ({
+                source_code: completeCode,
+                language_id: languageId,
+                stdin: input,
+                expected_output: output
+            }))
+            // submission array create hojayega 
+
+            const submitResult = await submitBatch(submissions)
 
         }
 
     } catch (err) {
-     res.status(500).json({error:'server error'})
+        res.status(500).json({ error: 'server error' })
     }
 }
