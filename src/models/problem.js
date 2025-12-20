@@ -17,36 +17,37 @@ const problemSchema = new Schema(
             enum: ["easy", "medium", "hard", "superHard"],
             required: true
         },
-        tags: {
-            type: String,
-            enum: [
-                "array",
-                "string",
-                "linkedList",
-                "stack",
-                "queue",
-                "hashing",
-                "twoPointers",
-                "slidingWindow",
-                "binarySearch",
-                "recursion",
-                "backtracking",
-                "greedy",
-                "dynamicProgramming",
-                "tree",
-                "binaryTree",
-                "bst",
-                "graph",
-                "heap",
-                "trie",
-                "bitManipulation",
-                "math",
-                "sorting"
-            ],
-            //   default: []
-            required: true
-
-        },
+        tags: [
+            {
+                type: String,
+                enum: [
+                    "array",
+                    "string",
+                    "linkedList",
+                    "stack",
+                    "queue",
+                    "hashing",
+                    "twoPointers",
+                    "slidingWindow",
+                    "binarySearch",
+                    "recursion",
+                    "backtracking",
+                    "greedy",
+                    "dynamicProgramming",
+                    "tree",
+                    "binaryTree",
+                    "bst",
+                    "graph",
+                    "heap",
+                    "trie",
+                    "bitManipulation",
+                    "math",
+                    "sorting"
+                ],
+                required: true
+            }
+        ]
+        ,
         visibleTestCases: [{
             input: {
                 type: String,
