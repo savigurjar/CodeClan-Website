@@ -51,6 +51,8 @@ const createProblem = async (req, res) => {
             }
             const resultToken = submitResult.map((value) => value.token);
             const testResult = await submitToken(resultToken);
+       
+            console.log(testResult)
 
             for (const test of testResult) {
                 if (test.status_id === 3) {
