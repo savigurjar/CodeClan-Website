@@ -324,4 +324,18 @@ const solvedProblemByUser = async (req, res) => {
     }
 }
 
-module.exports = { createProblem, updateProblem, deleteProblem, getProblemById, getAllProblem, solvedProblemByUser };
+const submittedProblem = async (req, res) => {
+    try {
+        const userId = req.result._id;
+        const problemId = req.params.id;
+
+        const ans = await Submission.find({ userId, problemId })
+        if (ans.length == 0) res.status(200).send("No submission is present")
+
+        res.status(200).json({ ans })
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+module.exports = { createProblem, updateProblem, deleteProblem, getProblemById, getAllProblem, solvedProblemByUser ,submittedProblem};
