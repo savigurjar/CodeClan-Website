@@ -27,11 +27,9 @@ function Header() {
       "
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        
         {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold text-green-950 dark:text-white"
-        >
+        <Link to="/" className="text-2xl font-bold text-green-950 dark:text-white">
           CodeClan
         </Link>
 
@@ -48,7 +46,7 @@ function Header() {
           ))}
         </nav>
 
-        {/* Right side */}
+        {/* Right Side */}
         <div className="hidden md:flex items-center gap-3">
           <ModeToggle />
 
@@ -71,20 +69,48 @@ function Header() {
               </Link>
             </>
           ) : (
-            <>
-              <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+            /* Profile Dropdown */
+            <div className="relative group">
+              <button className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
                 <User size={16} />
                 {user?.firstName || "User"}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm
-                           bg-red-600 text-white hover:bg-red-500 transition"
-              >
-                <LogOut size={16} />
-                Logout
               </button>
-            </>
+
+              <div
+                className="
+                  absolute right-0 mt-2 w-44 rounded-md border
+                  bg-white dark:bg-[#020f0b]
+                  shadow-lg opacity-0 invisible
+                  group-hover:opacity-100 group-hover:visible
+                  transition-all
+                "
+              >
+                <Link
+                  to="/dashboard"
+                  className="block px-4 py-2 text-sm dark:text-white text-green-950 hover:text-white hover:bg-green-950 dark:hover:bg-gray-800"
+                >
+                  Dashboard
+                </Link>
+
+                {user?.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    className="block px-4 py-2 text-sm dark:text-white text-green-950 hover:text-white hover:bg-green-950 dark:hover:bg-gray-800"
+                  >
+                    Admin
+                  </Link>
+                )}
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm
+                             text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <LogOut size={14} />
+                  Logout
+                </button>
+              </div>
+            </div>
           )}
         </div>
 
@@ -111,23 +137,26 @@ function Header() {
             </Link>
           ))}
 
-          {!isAuthenticated ? (
-            <div className="flex gap-3 pt-3">
-              <Link to="/login" onClick={() => setIsOpen(false)}>
-                Login
+          {isAuthenticated && (
+            <>
+              <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                Dashboard
               </Link>
-              <Link to="/signup" onClick={() => setIsOpen(false)}>
-                Sign Up
-              </Link>
-            </div>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-red-600 pt-3"
-            >
-              <LogOut size={16} />
-              Logout
-            </button>
+
+              {user?.role === "admin" && (
+                <Link to="/admin" onClick={() => setIsOpen(false)}>
+                  Admin
+                </Link>
+              )}
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-red-600 pt-2"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
           )}
         </div>
       )}

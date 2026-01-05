@@ -1,8 +1,7 @@
 import AlgorithmsPage from "../Components/Algopage";
 import AppLayout from "../Components/AppLayout";
 import CompanyPracticePage from "../Components/Company";
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
+
 import HeroPage from "../Components/Hero";
 import LearningPathsPage from "../Components/Learning";
 import PlatformFeaturesPage from "../Components/Platform";

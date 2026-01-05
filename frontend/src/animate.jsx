@@ -15,7 +15,7 @@ const Animate = () => {
     }, []);
 
     return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 mt-16">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 ">
             {/* 🌑 RADIAL BASE */}
             <div className="absolute inset-0 animate-radial" />
 
@@ -96,8 +96,8 @@ const Animate = () => {
   .animate-star {
     background: #7aa2ff;
     animation: star 3s infinite ease-in-out;
-  }
-`}</style>
+  }`}
+  </style>
 
         </div>
     );
