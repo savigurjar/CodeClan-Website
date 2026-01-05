@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword";
 import { checkAuth } from "./features/authSlice";
+import ProblemsPage from "./pages/Problem";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ function App() {
       />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/problems" element={<ProblemsPage/>}/>
 
     </Routes>
   );
