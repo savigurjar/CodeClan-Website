@@ -9,8 +9,9 @@ import Signup from './pages/Signup';
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword";
 import { checkAuth } from "./features/authSlice";
-import ProblemsPage from "./pages/Problem";
+import ProblemsPage from "./pages/NavLinks/Problem";
 import Dashboard from "./Components/DashBoard/DashBoard";
+import ContestsPage from "./pages/NavLinks/Contests";
 
 function App() {
   const dispatch = useDispatch();
@@ -45,8 +46,10 @@ function App() {
       />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+       <Route path="/dashboard" element={<Dashboard/>}/>
       <Route path="/problems" element={<ProblemsPage/>}/>
-      <Route path="/dashboard" element={<Dashboard/>}/>
+     
+      <Route path="/contests" element={<ContestsPage/>}/>
 
     </Routes>
   );

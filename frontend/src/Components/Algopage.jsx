@@ -1,4 +1,6 @@
 import Animate from "../animate";
+import { FiDatabase, FiCpu, FiMap, FiType } from "react-icons/fi";
+
 
 const AlgorithmsPage = () => {
   return (
@@ -25,10 +27,11 @@ const AlgorithmsPage = () => {
         {/* CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
+
           {/* Arrays */}
           <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-6 backdrop-blur hover:scale-[1.02] transition">
             <div className="w-10 h-10 rounded-lg bg-[#021510]/10 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
-              📊
+              <FiDatabase className="text-xl" />
             </div>
             <h3 className="font-semibold mb-1">Arrays</h3>
             <p className="text-sm text-black/60 dark:text-white/60 mb-4">
@@ -42,7 +45,7 @@ const AlgorithmsPage = () => {
           {/* Dynamic Programming */}
           <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-6 backdrop-blur hover:scale-[1.02] transition">
             <div className="w-10 h-10 rounded-lg bg-[#021510]/10 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
-              ⚙️
+              <FiCpu className="text-xl" />
             </div>
             <h3 className="font-semibold mb-1">Dynamic Programming</h3>
             <p className="text-sm text-black/60 dark:text-white/60 mb-4">
@@ -56,7 +59,7 @@ const AlgorithmsPage = () => {
           {/* Trees & Graphs */}
           <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-6 backdrop-blur hover:scale-[1.02] transition">
             <div className="w-10 h-10 rounded-lg bg-[#021510]/10 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
-              🌳
+              <FiMap className="text-xl" />
             </div>
             <h3 className="font-semibold mb-1">Trees & Graphs</h3>
             <p className="text-sm text-black/60 dark:text-white/60 mb-4">
@@ -70,7 +73,7 @@ const AlgorithmsPage = () => {
           {/* Strings */}
           <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-6 backdrop-blur hover:scale-[1.02] transition">
             <div className="w-10 h-10 rounded-lg bg-[#021510]/10 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
-              🔤
+              <FiType className="text-xl" />
             </div>
             <h3 className="font-semibold mb-1">Strings</h3>
             <p className="text-sm text-black/60 dark:text-white/60 mb-4">
@@ -80,6 +83,8 @@ const AlgorithmsPage = () => {
               10 Problems · Easy → Medium
             </span>
           </div>
+
+
         </div>
 
         {/* STATS */}
