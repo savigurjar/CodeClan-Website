@@ -177,45 +177,6 @@ const changePassword = async (req, res) => {
     }
 }
 
-// const forgotPassword = async (req, res) => {
-//     try {
-//         const { emailId } = req.body;
-
-//         const people = await User.findOne({ emailId });
-//         if (!people) {
-//             return res.status(200).send("If email exists, reset link sent");
-//         }
-
-//         const resetToken = crypto.randomBytes(32).toString("hex");
-
-//         people.resetPasswordToken = crypto
-//             .createHash("sha256")
-//             .update(resetToken)
-//             .digest("hex");
-
-//         people.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
-
-
-//         await people.save();
-
-//         // send email here
-//         console.log(`Reset URL: http://localhost:3000/reset-password/${resetToken}`);
-//         console.log("RAW TOKEN:", resetToken);
-//         console.log("HASHED TOKEN:", people.resetPasswordToken);
-//         console.log("EXPIRES AT:", people.resetPasswordExpire);
-
-
-//         res.status(200).send("Reset password link sent to email");
-//     } catch (err) {
-//         res.status(400).send("Error " + err.message);
-//     }
-
-// }
-
-
-
-
-
 
 require("dotenv").config();
 

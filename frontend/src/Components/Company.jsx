@@ -55,7 +55,7 @@ const CompanyPracticePage = () => {
   ];
 
   return (
-    <div className="relative mb-20 min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
+    <div className="relative  min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
 
       {/* 🌌 Background */}
       <div className="hidden dark:block">
