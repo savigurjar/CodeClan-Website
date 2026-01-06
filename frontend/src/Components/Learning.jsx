@@ -50,35 +50,79 @@ const LearningPathsPage = () => {
 
       {/* Cards */}
       <div className="px-6 sm:px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {paths.map((path) => (
-          <div
-            key={path.title}
-            className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-6 backdrop-blur hover:scale-[1.02] transition"
-          >
-            <div className="w-10 h-10 rounded-lg bg-[#021510]/10 dark:bg-emerald-500/20 flex items-center justify-center mb-4">
-              {path.icon}
-            </div>
-            <h3 className="font-semibold mb-1 text-black dark:text-white">{path.title}</h3>
-            <p className="text-sm text-black/60 dark:text-white/60 mb-4">{path.desc}</p>
-            <span className="text-xs px-3 py-1 rounded-full bg-[#021510]/10 border border-[#021510]/40 dark:bg-emerald-500/20 dark:border-emerald-500">
-              Start Learning
-            </span>
-          </div>
-        ))}
+  {paths.map((path) => (
+    <div
+      key={path.title}
+      className="
+        bg-white dark:bg-white/5
+        border border-black/10 dark:border-white/10
+        rounded-2xl p-6
+        backdrop-blur
+        hover:scale-[1.03]
+        hover:shadow-lg
+        transition-all
+      "
+    >
+      {/* Icon */}
+      <div
+        className="
+          w-11 h-11 rounded-lg
+          bg-[#021510]/10 text-[#021510]
+          dark:bg-emerald-500/20 dark:text-emerald-300
+          flex items-center justify-center
+          mb-4
+        "
+      >
+        {path.icon}
       </div>
+
+      {/* Title */}
+      <h3 className="font-semibold text-lg mb-1 text-green-950 dark:text-white">
+        {path.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-black/60 dark:text-white/60 mb-5">
+        {path.desc}
+      </p>
+
+      {/* CTA tag */}
+      <span
+        className="
+          inline-block text-xs font-semibold
+          px-3 py-1 rounded-full
+          border
+          border-[#021510]/30 text-[#021510] 
+          dark:border-emerald-400/40 dark:text-emerald-300
+          bg-[#021510]/5 dark:bg-emerald-500/10
+        "
+      >
+        Start Learning →
+      </span>
+    </div>
+  ))}
+</div>
+
 
 
 
 {/* CTA */}
 <div className="mt-10 mb-20 relative z-10">
-  <div className="max-w-3xl mx-auto rounded-2xl p-10 text-center bg-[#021510] text-white dark:bg-gradient-to-r dark:from-emerald-900 dark:to-emerald-950">
+  <div className="relative overflow-hidden max-w-3xl mx-auto rounded-2xl p-10 text-center bg-[#021510] text-white dark:bg-gradient-to-r dark:from-emerald-900 dark:to-emerald-950">
+   <div className="absolute inset-0 bg-emerald-500/10 blur-3xl pointer-events-none" />
     <h2 className="text-3xl font-extrabold mb-4 text-white">
       Ready to Level Up Your Skills?
     </h2>
     <p className="mb-6 text-white/90">
       Explore our learning paths, practice with curated problems, and become industry-ready.
     </p>
-    <button className="px-8 py-3 rounded-lg bg-white text-[#021510] font-semibold hover:opacity-90 transition">
+     <button className="
+              px-8 py-3 rounded-lg
+              bg-white text-[#021510]
+              font-semibold
+              hover:bg-emerald-100 hover:scale-105
+              transition-all
+            ">
       Start Learning
     </button>
   </div>

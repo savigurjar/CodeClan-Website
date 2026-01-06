@@ -1,12 +1,17 @@
 import Animate from "../animate";
 
 const HeroPage = () => {
-  return (
-    <div className="relative min-h-screen overflow-hidden top-0
-      bg-white text-black 
-      dark:bg-black dark:text-white">
+  const features = ["Live Battles", "Skill Ratings", "Instant Feedback"];
+  const stats = [
+    { label: "Active Coders", value: "10K+" },
+    { label: "Submissions", value: "1M+" },
+    { label: "Problems", value: "500+" },
+  ];
 
-      {/* 🌌 Background (only visible in dark mode) */}
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
+
+      {/* 🌌 Background (dark mode only) */}
       <div className="hidden dark:block">
         <Animate />
       </div>
@@ -16,7 +21,7 @@ const HeroPage = () => {
 
         {/* LEFT */}
         <div>
-          <h1 className="text-5xl font-extrabold leading-tight mb-6">
+          <h1 className=" text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
             Level Up Your <br />
             <span className="text-[#021510] dark:text-emerald-400">
               Coding Skills
@@ -28,10 +33,10 @@ const HeroPage = () => {
             real-world problems and live contests on our platform.
           </p>
 
-          <div className="flex gap-4 mb-10">
+          <div className="flex gap-4 mb-10 flex-wrap">
             <button className="
               px-6 py-3 rounded-lg font-semibold transition
-              bg-[#021510] text-white hover:opacity-90
+              bg-[#021510] text-white   hover:bg-[#03261d]
               dark:bg-emerald-900 dark:hover:bg-emerald-950
             ">
               Get Started Free 🚀
@@ -47,36 +52,31 @@ const HeroPage = () => {
           </div>
 
           {/* STATS */}
-          <div className="flex gap-8 text-sm text-black/70 dark:text-white/70">
-            <div>
-              <p className="text-2xl font-bold">10K+</p>
-              <p>Active Coders</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold">1M+</p>
-              <p>Submissions</p>
-            </div>
-            <div>
-              <p className="text-2xl font-bold">500+</p>
-              <p>Problems</p>
-            </div>
+          <div className="flex gap-8 flex-wrap text-sm text-black/70 dark:text-white/70">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col items-start sm:items-center">
+                <p className="text-2xl sm:text-3xl font-bold">{stat.value}</p>
+                <p>{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* RIGHT CARD */}
         <div className="
-          bg-black/5 dark:bg-white/5
+          bg-white/5 dark:bg-white/5
           border border-black/10 dark:border-white/10
           rounded-2xl overflow-hidden backdrop-blur
+          hover:scale-[1.02] transition-shadow hover:shadow-lg
         ">
           <img
             src="https://images.unsplash.com/photo-1519389950473-47ba0277781c"
             alt="coding"
-            className="w-full h-52 object-cover"
+            className="w-full h-52 sm:h-64 object-cover"
           />
 
           <div className="p-6">
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 text-green-950 dark:text-white">
               Compete. Learn. Grow.
             </h3>
             <p className="text-sm text-black/70 dark:text-white/70 mb-4">
@@ -84,20 +84,18 @@ const HeroPage = () => {
             </p>
 
             <div className="flex flex-wrap gap-2">
-              {["Live Battles", "Skill Ratings", "Instant Feedback"].map(
-                (item) => (
-                  <span
-                    key={item}
-                    className="
-                      px-3 py-1 text-xs rounded-full
-                      bg-black/5 border border-black/10
-                      dark:bg-white/10 dark:border-white/20
-                    "
-                  >
-                    {item}
-                  </span>
-                )
-              )}
+              {features.map((item) => (
+                <span
+                  key={item}
+                  className="
+                    px-3 py-1 text-xs rounded-full
+                    bg-black/5 border border-black/10
+                    dark:bg-white/10 dark:border-white/20
+                  "
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -108,23 +106,27 @@ const HeroPage = () => {
         <div className="
           rounded-2xl p-10 text-center
           bg-[#021510] text-white
-          dark:bg-gradient-to-r dark:from-emerald-900 dark:to-emerald-950
+          dark:bg-gradient-to-r dark:from-emerald-900 dark:to-emerald-950 relative overflow-hidden shadow-xl
         ">
+          <div className="absolute inset-0 bg-emerald-500/10 blur-3xl pointer-events-none" />
           <h2 className="text-3xl font-extrabold mb-4">
             Ready to Start Your Journey?
           </h2>
           <p className="mb-6 max-w-2xl mx-auto text-white/90">
             Improve daily, compete weekly, and track your progress.
           </p>
-          <button className="
-            px-8 py-3 rounded-lg font-semibold transition
-            bg-white text-[#021510] hover:opacity-90
-            dark:bg-black dark:text-white
-          ">
-            Join Now
+           <button className="
+              px-8 py-3 rounded-lg
+              bg-white text-[#021510]
+              font-semibold
+              hover:bg-emerald-100 hover:scale-105
+              transition-all
+            ">
+            Join Now 🚀
           </button>
         </div>
       </div>
+
     </div>
   );
 };
