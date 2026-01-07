@@ -14,7 +14,7 @@ const solveDoubt = async (req, res) => {
       model: "gemini-2.5-flash",
       contents: messages,
       config: {
-systemInstruction: `
+        systemInstruction: `
 You are an expert **Data Structures & Algorithms (DSA) mentor**. Your role is to teach DSA concepts in a structured, clear, point-wise manner. 
 
 ━━━━━━━━━━━━━━━━━━
