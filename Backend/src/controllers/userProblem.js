@@ -1,6 +1,7 @@
 const Problem = require('../models/problem');
 const User = require("../models/users")
 const { getLanguageById, submitBatch, submitToken } = require("../utils/problemUtility");
+const Submission = require("../models/submission")
 
 const createProblem = async (req, res) => {
     const {
@@ -218,8 +219,9 @@ const getProblemById = async (req, res) => {
     const { id } = req.params;
     try {
         if (!id) return res.status(400).send("Id is missing");
+        
 
-        const dsaProblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution isPremium points ');
+        const dsaProblem = await Problem.findById(id).select('_id title description difficulty  constraints tags visibleTestCases complexity likes dislikes startCode companies referenceSolution isPremium points ');
 
         if (!dsaProblem) return res.status(400).send("Problem is missing");
 
@@ -325,17 +327,19 @@ const solvedProblemByUser = async (req, res) => {
 }
 
 const submittedProblem = async (req, res) => {
-    try {
-        const userId = req.result._id;
-        const problemId = req.params.id;
+  try {
+    const userId = req.result._id;
+    const problemId = req.params.id;
 
-        const ans = await Submission.find({ userId, problemId })
-        if (ans.length == 0) res.status(200).send("No submission is present")
+    const submissions = await Submission.find({ userId, problemId });
 
-        res.status(200).json({ ans })
+    // Always return an array, even if empty
+    res.status(200).json(submissions);
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
+
+
 module.exports = { createProblem, updateProblem, deleteProblem, getProblemById, getAllProblem, solvedProblemByUser ,submittedProblem};
