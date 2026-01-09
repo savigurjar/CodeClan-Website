@@ -216,27 +216,35 @@ const deleteProblem = async (req, res) => {
 }
 
 const getProblemById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        if (!id) return res.status(400).send("Id is missing");
-        
+  const { id } = req.params;
 
-        const dsaProblem = await Problem.findById(id).select('_id title description difficulty  constraints tags visibleTestCases complexity likes dislikes startCode companies referenceSolution isPremium points ');
+  try {
+    if (!id) return res.status(400).send("Id is missing");
 
-        if (!dsaProblem) return res.status(400).send("Problem is missing");
+    const dsaProblem = await Problem.findById(id).select(
+      '_id title description difficulty constraints tags visibleTestCases complexity likes dislikes startCode companies referenceSolution isPremium points'
+    );
 
+    if (!dsaProblem) return res.status(404).send("Problem not found");
 
-        res.status(200).json({
-            message: "Problem found successfully",
-            problem: dsaProblem
-        })
+    const video = await SolutionVideo.findOne({ problemId: id });
 
+    res.status(200).json({
+      ...dsaProblem.toObject(),
+      video: video
+        ? {
+            secureUrl: video.secureUrl,
+            thumbnailUrl: video.thumbnailUrl,
+            duration: video.duration,
+          }
+        : null
+    });
 
-    } catch (err) {
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-        res.status(500).json({ error: err.message });
-    }
-}
 
 const getAllProblem = async (req, res) => {
     try {
@@ -327,19 +335,19 @@ const solvedProblemByUser = async (req, res) => {
 }
 
 const submittedProblem = async (req, res) => {
-  try {
-    const userId = req.result._id;
-    const problemId = req.params.id;
+    try {
+        const userId = req.result._id;
+        const problemId = req.params.id;
 
-    const submissions = await Submission.find({ userId, problemId });
+        const submissions = await Submission.find({ userId, problemId });
 
-    // Always return an array, even if empty
-    res.status(200).json(submissions);
+        // Always return an array, even if empty
+        res.status(200).json(submissions);
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
 
 
-module.exports = { createProblem, updateProblem, deleteProblem, getProblemById, getAllProblem, solvedProblemByUser ,submittedProblem};
+module.exports = { createProblem, updateProblem, deleteProblem, getProblemById, getAllProblem, solvedProblemByUser, submittedProblem };

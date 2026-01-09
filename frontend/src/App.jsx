@@ -13,9 +13,12 @@ import ProblemsPage from "./pages/NavLinks/Problem";
 import Dashboard from "./Components/DashBoard/DashBoard";
 import ContestsPage from "./pages/NavLinks/Contests";
 import Admin from "./pages/admin";
-import  CreateProblem from "./Components/Admin/CreateProblem"
+import CreateProblem from "./Components/Admin/CreateProblem"
 import ChatAi from "./pages/NavLinks/ChatAi";
 import ProblemPage from "./Components/ProblemIdPage/ProblemPage";
+import AdminDelete from "./Components/Admin/AdminDeleteVideo";
+import AdminVideo from "./Components/Admin/AdminVideo";
+import AdminUpload from "./Components/Admin/AdminUpload";
 
 function App() {
   const dispatch = useDispatch();
@@ -73,8 +76,11 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/problems" element={<ProblemsPage />} />
       <Route path="/contests" element={<ContestsPage />} />
-      <Route path="/chat" element={<ChatAi/>}/>
-       <Route path="/problem/:problemId" element={<ProblemPage/>}></Route>
+      <Route path="/chat" element={<ChatAi />} />
+      <Route path="/problem/:problemId" element={<ProblemPage />} />
+      <Route path="/admin/delete" element={isAuthenticated && user?.role === 'admin' ? <AdminDelete /> : <Navigate to="/" />} />
+      <Route path="/admin/video" element={isAuthenticated && user?.role === 'admin' ? <AdminVideo /> : <Navigate to="/" />} />
+      <Route path="/admin/upload/:problemId" element={isAuthenticated && user?.role === 'admin' ? <AdminUpload /> : <Navigate to="/" />} />
     </Routes>
   );
 }

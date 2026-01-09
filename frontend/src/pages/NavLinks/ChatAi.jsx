@@ -172,4 +172,181 @@ function ChatAi({ problem }) {
   );
 }
 
-export default ChatAi;
+export default ChatAi; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { useState, useRef, useEffect } from "react";
+// import { useForm } from "react-hook-form";
+// import axiosClient from "../../utils/axiosClient";
+// import { Send, Minimize2, MessageCircle } from "lucide-react";
+// import Animate from "../../animate";
+
+// function ChatAi({ problem }) {
+//   const [messages, setMessages] = useState([
+//     {
+//       role: "model",
+//       parts: [
+//         { text: "Hi 👋 I'm your DSA mentor. Ask me anything about logic or hints." },
+//       ],
+//     },
+//   ]);
+
+//   const [isTyping, setIsTyping] = useState(false);
+//   const [isOpen, setIsOpen] = useState(false); // chat window open/close
+//   const [isMinimized, setIsMinimized] = useState(false); // minimized state
+
+//   const messagesEndRef = useRef(null);
+//   const { register, handleSubmit, reset } = useForm();
+
+//   useEffect(() => {
+//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+//   }, [messages, isTyping]);
+
+//   const onSubmit = async (data) => {
+//     const userMsg = { role: "user", parts: [{ text: data.message }] };
+//     const updatedMessages = [...messages, userMsg];
+
+//     setMessages(updatedMessages);
+//     reset();
+//     setIsTyping(true);
+
+//     try {
+//       const res = await axiosClient.post("/ai/chat", {
+//         messages: updatedMessages,
+//         title: problem?.title,
+//         description: problem?.description,
+//         testCases: problem?.visibleTestCases,
+//         startCode: problem?.startCode,
+//       });
+
+//       setMessages((prev) => [
+//         ...prev,
+//         { role: "model", parts: [{ text: res.data.message }] },
+//       ]);
+//     } catch {
+//       setMessages((prev) => [
+//         ...prev,
+//         { role: "model", parts: [{ text: "⚠️ Something went wrong." }] },
+//       ]);
+//     } finally {
+//       setIsTyping(false);
+//     }
+//   };
+
+//   return (
+//     <>
+//       {/* 🟢 FLOATING BUTTON - ALWAYS Visible */}
+//       <div className="fixed bottom-6 right-6 z-50">
+//         <button
+//           onClick={() => setIsOpen(!isOpen)}
+//           className="flex items-center gap-2 px-4 py-3 rounded-full bg-emerald-600 text-white shadow-lg hover:bg-emerald-700"
+//         >
+//           <MessageCircle size={18} />
+//           DSA Chat
+//         </button>
+//       </div>
+
+//       {/* 🔵 CHAT WINDOW */}
+//       {isOpen && (
+//         <div className="fixed bottom-20 right-6 z-50 w-[350px] h-[500px] flex flex-col bg-white dark:bg-black/5 border border-gray-200 dark:border-white/10 rounded-2xl shadow-lg backdrop-blur">
+//           {/* Header */}
+//           <div className="px-4 py-3 border-b flex justify-between items-center">
+//             <h2 className="text-sm font-bold dark:text-emerald-400">
+//               🤖 DSA AI Mentor
+//             </h2>
+//             <div className="flex gap-2">
+//               <button
+//                 onClick={() => setIsMinimized(!isMinimized)}
+//                 className="p-1 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+//               >
+//                 <Minimize2 size={16} />
+//               </button>
+//               <button
+//                 onClick={() => setIsOpen(false)}
+//                 className="p-1 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+//               >
+//                 ✕
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* Messages */}
+//           {!isMinimized && (
+//             <>
+//               <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+//                 {messages.map((msg, i) => (
+//                   <div
+//                     key={i}
+//                     className={`flex ${
+//                       msg.role === "user" ? "justify-end" : "justify-start"
+//                     }`}
+//                   >
+//                     <div
+//                       className={`max-w-[75%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap ${
+//                         msg.role === "user"
+//                           ? "bg-emerald-600 text-white rounded-br-none"
+//                           : "bg-gray-100 dark:bg-black/40 dark:text-white rounded-bl-none"
+//                       }`}
+//                     >
+//                       {msg.parts[0].text}
+//                     </div>
+//                   </div>
+//                 ))}
+
+//                 {isTyping && (
+//                   <div className="flex justify-start">
+//                     <div className="bg-gray-100 dark:bg-black/40 px-3 py-2 rounded-xl">
+//                       <span className="text-emerald-400">Typing...</span>
+//                     </div>
+//                   </div>
+//                 )}
+
+//                 <div ref={messagesEndRef} />
+//               </div>
+
+//               {/* Input */}
+//               <form
+//                 onSubmit={handleSubmit(onSubmit)}
+//                 className="px-4 py-3 border-t flex gap-2"
+//               >
+//                 <input
+//                   {...register("message", { required: true })}
+//                   placeholder="Ask about logic, hints, edge cases..."
+//                   className="flex-1 px-3 py-2 rounded-xl border focus:ring-2 focus:ring-emerald-400"
+//                 />
+//                 <button className="w-10 h-10 bg-emerald-700 text-white rounded-xl flex items-center justify-center">
+//                   <Send size={16} />
+//                 </button>
+//               </form>
+//             </>
+//           )}
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+
+// export default ChatAi;
