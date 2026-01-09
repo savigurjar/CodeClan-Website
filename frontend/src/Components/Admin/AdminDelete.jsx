@@ -6,37 +6,43 @@ const AdminDelete = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetchProblems();
-  }, []);
+    fetchProblems(currentPage);
+  }, [currentPage]);
 
- const fetchProblems = async () => {
-  try {
-    setLoading(true);
-    const { data } = await axiosClient.get("/problem/getAllProblem");
+  const fetchProblems = async (page = 1) => {
+    try {
+      setLoading(true);
 
-    console.log("getAllProblem response 👉", data); // 🔴 IMPORTANT
+      const { data } = await axiosClient.get(`/problem/getAllProblem?page=${page}`);
+      console.log("getAllProblem response 👉", data);
 
-    setProblems(Array.isArray(data) ? data : []);
-  } catch (err) {
-    setError("Failed to fetch problems");
-  } finally {
-    setLoading(false);
-  }
-};
+      setProblems(Array.isArray(data.problems) ? data.problems : []);
+      setCurrentPage(data.currentPage || 1);
+      setTotalPages(data.totalPages || 1);
 
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch problems");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this problem?")) return;
 
     try {
-      // ✅ Delete problem
+      // Delete problem
       await axiosClient.delete(`/problem/delete/${id}`);
 
-      // ✅ OPTIONAL: delete video (safe even if none exists)
+      // Delete video (if exists)
       await axiosClient.delete(`/video/delete/${id}`);
 
+      // Remove from local state
       setProblems((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
       console.error(err);
@@ -78,7 +84,6 @@ const AdminDelete = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold">Delete Problems</h1>
-
         <input
           type="text"
           placeholder="Search by title, ID, difficulty, or tags..."
@@ -105,7 +110,7 @@ const AdminDelete = () => {
             {filteredProblems.length ? (
               filteredProblems.map((problem, index) => (
                 <tr key={problem._id}>
-                  <td>{index + 1}</td>
+                  <td>{index + 1 + (currentPage - 1) * 10}</td>
                   <td>{problem.title}</td>
                   <td>
                     <span
@@ -146,6 +151,27 @@ const AdminDelete = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4 gap-2">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="btn btn-sm"
+        >
+          Prev
+        </button>
+        <span className="btn btn-sm btn-disabled">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="btn btn-sm"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

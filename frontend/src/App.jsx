@@ -14,9 +14,10 @@ import Dashboard from "./Components/DashBoard/DashBoard";
 import ContestsPage from "./pages/NavLinks/Contests";
 import Admin from "./pages/admin";
 import CreateProblem from "./Components/Admin/CreateProblem"
+import UpdateProblem from "./Components/Admin/UpdateProblem";
 import ChatAi from "./pages/NavLinks/ChatAi";
 import ProblemPage from "./Components/ProblemIdPage/ProblemPage";
-import AdminDelete from "./Components/Admin/AdminDeleteVideo";
+import AdminDelete from "./Components/Admin/AdminDelete";
 import AdminVideo from "./Components/Admin/AdminVideo";
 import AdminUpload from "./Components/Admin/AdminUpload";
 
@@ -68,7 +69,11 @@ function App() {
           )
         }
       />
-      <Route path="/admin/create" element={isAuthenticated && user?.role === 'admin' ? <CreateProblem /> : <Navigate to="/" />} />
+      <Route path="/admin/create/:id" element={isAuthenticated && user?.role === 'admin' ? <CreateProblem /> : <Navigate to="/" />} />
+      <Route
+        path="/admin/update/:id"
+        element={isAuthenticated && user?.role === 'admin' ? <UpdateProblem /> : <Navigate to="/" />}
+      />
 
       {/* OTHER ROUTES */}
       <Route path="/forgot-password" element={<ForgotPassword />} />

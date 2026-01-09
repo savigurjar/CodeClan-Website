@@ -49,7 +49,7 @@ const ProblemPage = () => {
             try {
                 setLoading(true);
                 const res = await axiosClient.get(`/problem/getProblemById/${problemId}`);
-                const data = res.data?.problem;
+                const data = res.data.problem;
                 setProblem(data);
 
                 const initialCode =
@@ -63,6 +63,45 @@ const ProblemPage = () => {
         };
         fetchProblem();
     }, [problemId, selectedLanguage]);
+
+    //     useEffect(() => {
+    //     const fetchProblem = async () => {
+    //         try {
+    //             setLoading(true);
+
+    //             // Fetch the problem from backend
+    //             const res = await axiosClient.get(`/problem/getProblemById/${problemId}`);
+
+    //             // Extract the actual problem object
+    //             const data = res.data.problem;
+
+    //             if (!data) {
+    //                 console.error("Problem not found in response");
+    //                 setProblem(null);
+    //                 return;
+    //             }
+
+    //             setProblem(data);
+
+    //             // Get initial code for the selected language
+    //             const initialCode =
+    //                 data?.startCode?.find(
+    //                     (sc) => sc.language.toLowerCase() === backendLangMap[selectedLanguage]
+    //                 )?.initialCode || "";
+
+    //             setCode(initialCode);
+
+    //         } catch (err) {
+    //             console.error("Problem fetch failed:", err);
+    //             setProblem(null);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchProblem();
+    // }, [problemId, selectedLanguage]);
+
 
     // Update code on language change
     useEffect(() => {
@@ -167,10 +206,10 @@ const ProblemPage = () => {
 
                                     <span
                                         className={`px-3 py-1 rounded-full text-xs font-semibold ${problem.difficulty === "easy"
-                                                ? "bg-emerald-500/10 text-emerald-400"
-                                                : problem.difficulty === "medium"
-                                                    ? "bg-yellow-500/10 text-yellow-400"
-                                                    : "bg-red-500/10 text-red-400"
+                                            ? "bg-emerald-500/10 text-emerald-400"
+                                            : problem.difficulty === "medium"
+                                                ? "bg-yellow-500/10 text-yellow-400"
+                                                : "bg-red-500/10 text-red-400"
                                             }`}
                                     >
                                         {problem.difficulty?.toUpperCase()}
@@ -257,9 +296,23 @@ const ProblemPage = () => {
 
 
 
-                        {activeLeftTab === "editorial" && problem.secureUrl && (
+                        {/* {activeLeftTab === "editorial" && problem.secureUrl && (
                             <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
+                        )} */}
+                        {activeLeftTab === "editorial" && (
+                            problem.secureUrl ? (
+                                <Editorial
+                                    secureUrl={problem.secureUrl}
+                                    thumbnailUrl={problem.thumbnailUrl}
+                                    duration={problem.duration}
+                                />
+                            ) : (
+                                <div className="text-gray-400 text-sm">
+                                    Editorial video not available for this problem.
+                                </div>
+                            )
                         )}
+
 
                         {activeLeftTab === "solutions" &&
                             problem.referenceSolution?.map((sol, i) => (

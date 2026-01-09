@@ -1,126 +1,212 @@
-import { useEffect, useState } from 'react';
-import axiosClient from "../../utils/axiosClient"
-import { NavLink } from 'react-router';
+import { useEffect, useState } from "react";
+import axiosClient from "../../utils/axiosClient";
+import { NavLink } from "react-router";
 
 const AdminVideo = () => {
   const [problems, setProblems] = useState([]);
+  const [videoMap, setVideoMap] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetchProblems();
-  }, []);
+    loadData(currentPage);
+  }, [currentPage]);
 
-  const fetchProblems = async () => {
+  const loadData = async (page = 1) => {
     try {
       setLoading(true);
-      const { data } = await axiosClient.get('/problem/getAllProblem');
-      setProblems(data);
+
+      const [problemRes, videoRes] = await Promise.all([
+        axiosClient.get(`/problem/getAllProblem?page=${page}`),
+        axiosClient.get("/video/status"),
+      ]);
+
+      console.log("Problem API response:", problemRes.data);
+      console.log("Video API response:", videoRes.data);
+
+      setProblems(Array.isArray(problemRes.data.problems) ? problemRes.data.problems : []);
+      setVideoMap(videoRes.data || {});
+      setCurrentPage(problemRes.data.currentPage || 1);
+      setTotalPages(problemRes.data.totalPages || 1);
+
     } catch (err) {
-      setError('Failed to fetch problems');
-      console.error(err);
+      console.error("Error loading admin data:", err.response || err);
+      setError(err.response?.data?.error || "Failed to load admin data");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this problem?')) return;
-    
+  const handleDelete = async (problemId) => {
+    if (!window.confirm("Delete this video?")) return;
+
     try {
-      await axiosClient.delete(`/video/delete/${id}`);
-      setProblems(problems.filter(problem => problem._id !== id));
+      await axiosClient.delete(`/video/delete/${problemId}`);
+      setVideoMap(prev => {
+        const newMap = { ...prev };
+        delete newMap[problemId];
+        return newMap;
+      });
     } catch (err) {
-      setError(err);
-      console.log(err);
+      console.error("Delete error:", err.response || err);
+      alert(err.response?.data?.error || "Failed to delete video");
     }
   };
 
+  const formatDuration = (seconds) => {
+    if (!seconds) return "-";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
+    return <div className="loading loading-spinner loading-lg mx-auto mt-20"></div>;
   }
 
   if (error) {
     return (
-      <div className="alert alert-error shadow-lg my-4">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{error.response.data.error}</span>
-        </div>
+      <div className="alert alert-error my-4">
+        <span>{error}</span>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Video Upload and Delete</h1>
-      </div>
+      <h1 className="text-3xl font-bold mb-6">Video Upload & Management</h1>
 
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr>
-              <th className="w-1/12">#</th>
-              <th className="w-4/12">Title</th>
-              <th className="w-2/12">Difficulty</th>
-              <th className="w-3/12">Tags</th>
-              <th className="w-2/12">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {problems.map((problem, index) => (
-              <tr key={problem._id}>
-                <th>{index + 1}</th>
-                <td>{problem.title}</td>
-                <td>
-                  <span className={`badge ${
-                    problem.difficulty === 'Easy' 
-                      ? 'badge-success' 
-                      : problem.difficulty === 'Medium' 
-                        ? 'badge-warning' 
-                        : 'badge-error'
-                  }`}>
-                    {problem.difficulty}
-                  </span>
-                </td>
-                <td>
-                  <span className="badge badge-outline">
-                    {problem.tags}
-                  </span>
-                </td>
-                <td>
-                  <div className="flex space-x-1">
-                     <NavLink 
-                        to={`/admin/upload/${problem._id}`}
-                        className={`btn bg-blue-600`}
-                        >
-                        Upload
-                    </NavLink>
-                  </div>
-                </td>
-                <td>
-                  <div className="flex space-x-2">
-                    <button 
-                      onClick={() => handleDelete(problem._id)}
-                      className="btn btn-sm btn-error"
+      <table className="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Difficulty</th>
+            <th>Tags</th>
+            <th>Video</th>
+            <th>Duration</th>
+            <th>Status</th>
+            <th>Thumbnail</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {Array.isArray(problems) && problems.length > 0 ? (
+            problems.map((problem, index) => {
+              const video = videoMap?.[problem._id];
+
+              return (
+                <tr key={problem._id}>
+                  <th>{index + 1 + (currentPage - 1) * 10}</th>
+                  <td>{problem.title}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        problem.difficulty === "Easy"
+                          ? "badge-success"
+                          : problem.difficulty === "Medium"
+                          ? "badge-warning"
+                          : "badge-error"
+                      }`}
                     >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                      {problem.difficulty}
+                    </span>
+                  </td>
+                  <td>
+                    {problem.tags?.map((tag, i) => (
+                      <span key={i} className="badge badge-outline mr-1">
+                        {tag}
+                      </span>
+                    ))}
+                  </td>
+                  <td>
+                    {video ? (
+                      <span className="badge badge-success">Uploaded</span>
+                    ) : (
+                      <span className="badge badge-ghost">No Video</span>
+                    )}
+                  </td>
+                  <td>{formatDuration(video?.duration)}</td>
+                  <td>
+                    {video ? (
+                      <span
+                        className={`badge ${
+                          video.status === "approved"
+                            ? "badge-success"
+                            : video.status === "pending"
+                            ? "badge-warning"
+                            : "badge-error"
+                        }`}
+                      >
+                        {video.status}
+                      </span>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>
+                    {video?.thumbnailUrl ? (
+                      <img
+                        src={video.thumbnailUrl}
+                        alt="Thumbnail"
+                        className="w-20 h-12 rounded"
+                      />
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>
+                    <div className="flex gap-2">
+                      <NavLink
+                        to={`/admin/upload/${problem._id}`}
+                        className="btn btn-sm btn-info"
+                      >
+                        {video ? "Update" : "Upload"}
+                      </NavLink>
+                      <button
+                        onClick={() => handleDelete(problem._id)}
+                        disabled={!video}
+                        className="btn btn-sm btn-error"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={9} className="text-center">
+                No problems found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4 gap-2">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="btn btn-sm"
+        >
+          Prev
+        </button>
+        <span className="btn btn-sm btn-disabled">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="btn btn-sm"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
