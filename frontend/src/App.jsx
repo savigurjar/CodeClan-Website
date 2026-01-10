@@ -20,6 +20,8 @@ import ProblemPage from "./Components/ProblemIdPage/ProblemPage";
 import AdminDelete from "./Components/Admin/AdminDelete";
 import AdminVideo from "./Components/Admin/AdminVideo";
 import AdminUpload from "./Components/Admin/AdminUpload";
+import AdminUpdate from "./Components/Admin/AdminUpdate";
+import Tutorials from "./pages/NavLinks/Tutorials";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +72,9 @@ function App() {
         }
       />
       <Route path="/admin/create/:id" element={isAuthenticated && user?.role === 'admin' ? <CreateProblem /> : <Navigate to="/" />} />
+      <Route path="/admin/update" element={isAuthenticated && user?.role === 'admin' ? <AdminUpdate /> : <Navigate to="/" />} />
+
+
       <Route
         path="/admin/update/:id"
         element={isAuthenticated && user?.role === 'admin' ? <UpdateProblem /> : <Navigate to="/" />}
@@ -81,6 +86,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/problems" element={<ProblemsPage />} />
       <Route path="/contests" element={<ContestsPage />} />
+      <Route path="/tutorials" element={<Tutorials />} />
       <Route path="/chat" element={<ChatAi />} />
       <Route path="/problem/:problemId" element={<ProblemPage />} />
       <Route path="/admin/delete" element={isAuthenticated && user?.role === 'admin' ? <AdminDelete /> : <Navigate to="/" />} />
