@@ -1,6 +1,6 @@
 const express = require('express');
 const authRouter = express.Router();
-const { register, login, logout ,getProfile,adminRegister,deleteProfile,changePassword,forgotPassword,resetPassword,getAllUsers} = require("../controllers/userAuthenticate")
+const { register, login, logout ,getProfile,updateProfile,adminRegister,deleteProfile,changePassword,forgotPassword,resetPassword,getAllUsers} = require("../controllers/userAuthenticate")
 const userMiddleware = require("../middleware/userMiddleware")
 const adminMiddleware = require("../middleware/adminMiddleware")
 
@@ -24,6 +24,8 @@ authRouter.post('/reset-password/:token', resetPassword);  // kebab-case
 authRouter.get('/admin/users', adminMiddleware, getAllUsers);
 // delete profile
 authRouter.delete('/deleteProfile',userMiddleware,deleteProfile)
+authRouter.put("/updateProfile", userMiddleware, updateProfile);
+
 
 authRouter.get("/check", userMiddleware, (req, res) => {
     try {

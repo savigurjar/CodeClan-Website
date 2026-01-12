@@ -280,6 +280,64 @@ const resetPassword = async (req, res) => {
         res.status(400).send("Error " + err.message);
     }
 };
+const updateProfile = async (req, res) => {
+    try {
+        const userId = req.result._id;
+
+        // Allowed top-level fields
+        const allowedFields = ["firstName", "lastName", "age", "socialProfiles"];
+        const updates = {};
+
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) {
+                updates[field] = req.body[field];
+            }
+        }
+
+        // Optional: allow only known social profile keys
+        if (updates.socialProfiles) {
+            const allowedSocials = ["linkedin", "x", "leetcode", "github"];
+            const filteredSocials = {};
+
+            for (const key of allowedSocials) {
+                if (updates.socialProfiles[key]) {
+                    filteredSocials[key] = updates.socialProfiles[key];
+                }
+            }
+
+            updates.socialProfiles = filteredSocials;
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ message: "No valid fields to update" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updates },
+            {
+                new: true,
+                runValidators: true,
+                select: "-password -resetPasswordToken -resetPasswordExpire"
+            }
+        );
+
+        if (!updatedUser) throw new Error("User not found");
+
+        res.status(200).json({
+            success: true,
+            user: updatedUser,
+            message: "Profile updated successfully"
+        });
+
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
 
 const getAllUsers = async (req, res) => {
     try {
@@ -313,4 +371,4 @@ const getAllUsers = async (req, res) => {
 
 
 
-module.exports = { register, login, getProfile, logout, adminRegister, deleteProfile, changePassword, forgotPassword, resetPassword, getAllUsers }
+module.exports = { register, login, getProfile, logout, adminRegister,updateProfile, deleteProfile, changePassword, forgotPassword, resetPassword, getAllUsers }

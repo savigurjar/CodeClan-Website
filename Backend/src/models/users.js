@@ -37,6 +37,25 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    socialProfiles: {
+        linkedin: {
+            type: String,
+            trim: true
+        },
+        x: {                // Twitter / X
+            type: String,
+            trim: true
+        },
+        leetcode: {
+            type: String,
+            trim: true
+        },
+        github: {           // ✅ NEW
+            type: String,
+            trim: true
+        }
+    },
+
     resetPasswordToken: {
         type: String
     },
