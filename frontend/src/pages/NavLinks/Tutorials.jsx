@@ -1,4 +1,5 @@
-import { useRef } from "react";
+// src/pages/Tutorials/Tutorials.jsx
+import { useRef, useState, useEffect } from "react";
 import { FiPlay } from "react-icons/fi";
 import { BsFillPlayCircleFill } from "react-icons/bs";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -10,6 +11,8 @@ import fullstack from "/assets/fullstack.jpg";
 import AppLayout from "../../Components/AppLayout";
 
 const Tutorials = () => {
+  const [loading, setLoading] = useState(true);
+
   const tutorials = [
     {
       title: "Data Structures & Algorithms",
@@ -39,8 +42,6 @@ const Tutorials = () => {
       meta: "Core Concepts",
       link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFuf-27K64l7-hV7o0fr9zx7",
     },
-    
-    // Add more tutorials here
   ];
 
   const stats = [
@@ -53,7 +54,7 @@ const Tutorials = () => {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const scrollAmount = 300; // distance to scroll per click
+      const scrollAmount = 300;
       if (direction === "left") {
         scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
       } else {
@@ -61,6 +62,25 @@ const Tutorials = () => {
       }
     }
   };
+
+  // Simulate loading (remove or replace with API call)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
+          <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
+            Loading tutorials...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AppLayout>
@@ -82,7 +102,6 @@ const Tutorials = () => {
 
           {/* Horizontal Scrollable Tutorials */}
           <div className="relative">
-            {/* Left Arrow */}
             <button
               onClick={() => scroll("left")}
               className="absolute -left-10 top-1/2 -translate-y-1/2 z-20 p-2 bg-white dark:bg-black rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
@@ -90,7 +109,6 @@ const Tutorials = () => {
               <FaChevronLeft className="text-2xl" />
             </button>
 
-            {/* Scrollable Container */}
             <div
               ref={scrollRef}
               className="flex gap-6 overflow-x-auto scroll-smooth pb-4 hide-scrollbar"
@@ -133,7 +151,6 @@ const Tutorials = () => {
               ))}
             </div>
 
-            {/* Right Arrow */}
             <button
               onClick={() => scroll("right")}
               className="absolute -right-10 top-1/2 -translate-y-1/2 z-20 p-2 bg-white dark:bg-black rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"

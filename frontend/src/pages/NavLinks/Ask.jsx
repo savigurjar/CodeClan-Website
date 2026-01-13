@@ -24,6 +24,7 @@ function Ask() {
   ]);
 
   const [isTyping, setIsTyping] = useState(false);
+  const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
 
   const {
@@ -32,6 +33,14 @@ function Ask() {
     reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    // Simulate initial load (or fetch user session / AI init)
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1200); // 1.2s loader
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,7 +59,7 @@ function Ask() {
 
     try {
       const response = await axiosClient.post("/ai/ask", {
-        messages: updatedMessages, // ✅ only messages now
+        messages: updatedMessages,
       });
 
       setMessages((prev) => [
@@ -77,6 +86,21 @@ function Ask() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="flex flex-col items-center bg-green-50 dark:bg-black/20 border border-green-200 dark:border-white/20 rounded-2xl p-8 shadow-lg">
+          {/* Spinner */}
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
+          {/* Message */}
+          <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
+            Initializing AI Mentor...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
@@ -89,7 +113,7 @@ function Ask() {
         <div className="relative z-10 max-w-3xl mx-auto mt-10 h-[92vh] flex flex-col bg-white dark:bg-black/5 border border-gray-200 dark:border-white/10 rounded-2xl shadow-lg backdrop-blur">
 
           {/* Header */}
-          <div className="px-6 py-4 border-b  border-gray-200 dark:border-white/10">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-white/10">
             <h2 className="text-lg font-extrabold text-gray-900 dark:text-emerald-400">
               🤖 AI Engineering Mentor
             </h2>
@@ -122,16 +146,17 @@ function Ask() {
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"
-                  }`}
+                className={`flex ${
+                  msg.role === "user" ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[75%] px-4 py-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap
-                  ${msg.role === "user"
-                      ? "bg-emerald-600 text-white rounded-br-none"
-                      : "bg-gray-100 text-gray-900 dark:bg-black/40 dark:text-white rounded-bl-none"
-                    }
-                `}
+                    ${
+                      msg.role === "user"
+                        ? "bg-emerald-600 text-white rounded-br-none"
+                        : "bg-gray-100 text-gray-900 dark:bg-black/40 dark:text-white rounded-bl-none"
+                    }`}
                 >
                   {msg.parts[0].text}
                 </div>

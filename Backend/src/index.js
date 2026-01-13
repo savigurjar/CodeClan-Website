@@ -16,7 +16,7 @@ const problemRouter = require("./routes/problemCreator");
 const submitRouter = require("./routes/submit");
 const aiRouter = require("./routes/aiChatting")
 const videoRouter = require("./routes/videoCreater");
-const dashRouter = require("./routes/dashboardRoute");      
+      
 
 // Middleware
 app.use(cors({
@@ -32,7 +32,7 @@ app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);
 app.use("/ai",aiRouter);
 app.use("/video",videoRouter);
-app.use("/dashboard", dashRouter);
+
 
 // Serve React frontend (for production build)
 app.use(express.static(path.join(__dirname, "client/build")));

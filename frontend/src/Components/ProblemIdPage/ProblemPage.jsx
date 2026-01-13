@@ -157,12 +157,21 @@ const ProblemPage = () => {
         }
     };
 
-    if (loading)
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
-                <span className="text-emerald-400 text-lg">Loading problem…</span>
-            </div>
-        );
+   if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="flex flex-col items-center bg-green-50 border border-green-200 rounded-2xl p-8 shadow-lg">
+        {/* Spinner */}
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 mb-4"></div>
+        {/* Message */}
+        <p className="text-green-900 font-semibold text-lg">
+          Loading problem...
+        </p>
+      </div>
+    </div>
+  );
+}
+
 
     if (!problem)
         return (
