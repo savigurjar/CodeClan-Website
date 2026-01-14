@@ -5,6 +5,7 @@ import axiosClient from "../../utils/axiosClient";
 import { CheckCircle } from "lucide-react";
 import AppLayout from "../../Components/AppLayout";
 import Animate from "../../animate"
+import StatsSection from "./StateSection";
 const ProblemsPage = () => {
   const { user } = useSelector((state) => state.auth);
 
@@ -23,6 +24,8 @@ const ProblemsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
 
   // Problem of the Day
   const [dailyProblem, setDailyProblem] = useState(null);
@@ -39,6 +42,7 @@ const ProblemsPage = () => {
   // Fetch problems
   // Fetch problems
   const fetchProblems = async (page = 1) => {
+     setLoading(true);
     try {
       let params = { page, limit: 10 };
 
@@ -69,7 +73,9 @@ const ProblemsPage = () => {
     } catch (err) {
       console.error(err);
       setProblems([]);
-    }
+    }finally {
+    setLoading(false); // stop loading
+  }
   };
 
 
@@ -77,6 +83,7 @@ const ProblemsPage = () => {
   const fetchSolvedProblems = async () => {
     if (!user) return;
     try {
+       
       const res = await axiosClient.get("/problem/problemSolvedByUser");
       setSolvedProblems(res.data);
     } catch (err) {
@@ -168,6 +175,18 @@ const ProblemsPage = () => {
   };
 
 
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
+        <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
+          Loading Problems...
+        </p>
+      </div>
+    </div>
+  );
+}
 
 
   return (
@@ -472,7 +491,7 @@ const ProblemsPage = () => {
 
 
         {/* STATS */}
-        {/* STATS */}
+        {/* STATS
         <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
           {[
             { label: "Total Problems", value: "120+", icon: "📘" },
@@ -502,7 +521,8 @@ const ProblemsPage = () => {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
+        <StatsSection/>
 
 
         {/* CTA */}

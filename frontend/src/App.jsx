@@ -12,7 +12,7 @@ import { checkAuth } from "./features/authSlice";
 import ProblemsPage from "./pages/NavLinks/Problem";
 import Dashboard from "./Components/DashBoard/DashBoard";
 import ContestsPage from "./pages/NavLinks/Contests";
-import Admin from "./pages/admin";
+import Admin from "./pages/Admin";
 import CreateProblem from "./Components/Admin/CreateProblem";
 import UpdateProblem from "./Components/Admin/UpdateProblem";
 import ChatAi from "./pages/NavLinks/ChatAi";
@@ -24,10 +24,10 @@ import AdminUpload from "./Components/Admin/AdminUpload";
 import AdminUpdate from "./Components/Admin/AdminUpdate";
 import Tutorials from "./pages/NavLinks/Tutorials";
 
-// 🔥 DISCUSS IMPORTS
-import DiscussList from "./pages/Discuss/DiscussList";
-import DiscussDetails from "./pages/Discuss/DiscussDetails";
-import DiscussCreate from "./pages/Discuss/DiscussCreate";
+// // 🔥 DISCUSS IMPORTS
+// import DiscussList from "./pages/Discuss/DiscussList";
+// import DiscussDetails from "./pages/Discuss/DiscussDetails";
+// import DiscussCreate from "./pages/Discuss/DiscussCreate";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,8 +42,13 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
+          <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
+            Loading ...
+          </p>
+        </div>
       </div>
     );
   }
@@ -145,7 +150,7 @@ function App() {
       />
 
       {/* DISCUSS (BLOGS) */}
-      <Route path="/discuss" element={<DiscussList />} />
+      {/* <Route path="/discuss" element={<DiscussList />} />
       <Route path="/discuss/:id" element={<DiscussDetails />} />
       <Route
         path="/admin/discuss/create"
@@ -156,7 +161,7 @@ function App() {
             <Navigate to="/" />
           )
         }
-      />
+      /> */}
 
       {/* OTHER ROUTES */}
       <Route path="/forgot-password" element={<ForgotPassword />} />

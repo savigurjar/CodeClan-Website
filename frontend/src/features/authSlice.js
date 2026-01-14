@@ -6,7 +6,7 @@ import axiosClient from "../utils/axiosClient";
 
 // Register user
 export const registerUser = createAsyncThunk(
-  "auth/register",
+  "auth/signup",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axiosClient.post("/user/register", userData);

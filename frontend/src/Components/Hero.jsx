@@ -1,3 +1,5 @@
+// src/pages/HeroPage.jsx
+import { useState, useEffect } from "react";
 import Animate from "../animate";
 
 const HeroPage = () => {
@@ -7,6 +9,25 @@ const HeroPage = () => {
     { label: "Submissions", value: "1M+" },
     { label: "Problems", value: "500+" },
   ];
+
+  // Images for the right card slideshow
+  const images = [
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+    "https://plus.unsplash.com/premium_photo-1661877737564-3dfd7282efcb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y29kaW5nfGVufDB8fDB8fHww",
+    "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGNvZGluZ3xlbnwwfHwwfHx8MA%3D%3D",
+    "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y29kaW5nfGVufDB8fDB8fHww",
+  ];
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // Change image every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 5000); // 5000ms = 5 seconds
+
+    return () => clearInterval(interval); // cleanup on unmount
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
@@ -21,7 +42,7 @@ const HeroPage = () => {
 
         {/* LEFT */}
         <div>
-          <h1 className=" text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
+          <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
             Level Up Your <br />
             <span className="text-[#021510] dark:text-emerald-400">
               Coding Skills
@@ -36,7 +57,7 @@ const HeroPage = () => {
           <div className="flex gap-4 mb-10 flex-wrap">
             <button className="
               px-6 py-3 rounded-lg font-semibold transition
-              bg-[#021510] text-white   hover:bg-[#03261d]
+              bg-[#021510] text-white hover:bg-[#03261d]
               dark:bg-emerald-900 dark:hover:bg-emerald-950
             ">
               Get Started Free 🚀
@@ -70,9 +91,9 @@ const HeroPage = () => {
           hover:scale-[1.02] transition-shadow hover:shadow-lg
         ">
           <img
-            src="https://images.unsplash.com/photo-1519389950473-47ba0277781c"
+            src={images[currentImage]}
             alt="coding"
-            className="w-full h-52 sm:h-64 object-cover"
+            className="w-full h-52 sm:h-64 object-cover transition-all duration-1000 ease-in-out"
           />
 
           <div className="p-6">

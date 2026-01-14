@@ -8,41 +8,57 @@ import dsa from "/assets/dsa.jpg";
 import javascript from "/assets/javascript.jpg";
 import systemDesign from "/assets/systemdesign.jpg";
 import fullstack from "/assets/fullstack.jpg";
+import abdulbari from "/assets/abdulbari.jpg";
+import operating from "/assets/operating.jpg";
 import AppLayout from "../../Components/AppLayout";
 
 const Tutorials = () => {
   const [loading, setLoading] = useState(true);
 
-  const tutorials = [
-    {
-      title: "Data Structures & Algorithms",
-      image: dsa,
-      desc: "Master DSA fundamentals with structured practice",
-      meta: "Beginner → Advanced",
-      link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFu4ovJ41PywklqI7IyXwr01",
-    },
-    {
-      title: "System Design",
-      image: systemDesign,
-      desc: "Scalable systems & real-world architecture",
-      meta: "Intermediate → Advanced",
-      link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFvzp6XhcNFpk1WdOcyVo9qT",
-    },
-    {
-      title: "Full Stack Development",
-      image: fullstack,
-      desc: "Frontend to backend with modern stack",
-      meta: "Project Based",
-      link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFsistSzOgnD4cWgFGRVda4X",
-    },
-    {
-      title: "JavaScript Mastery",
-      image: javascript,
-      desc: "Deep dive into JS internals & async patterns",
-      meta: "Core Concepts",
-      link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFuf-27K64l7-hV7o0fr9zx7",
-    },
-  ];
+const tutorials = [
+  {
+    title: "Data Structures & Algorithms",
+    image: dsa,
+    desc: "Master DSA fundamentals with structured practice",
+    meta: "Beginner → Advanced",
+    link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFu4ovJ41PywklqI7IyXwr01",
+  },
+  {
+    title: "System Design",
+    image: systemDesign,
+    desc: "Scalable systems & real-world architecture",
+    meta: "Intermediate → Advanced",
+    link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFvzp6XhcNFpk1WdOcyVo9qT",
+  },
+  {
+    title: "Full Stack Development",
+    image: fullstack,
+    desc: "Frontend to backend with modern stack",
+    meta: "Project Based",
+    link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFsistSzOgnD4cWgFGRVda4X",
+  },
+  {
+    title: "JavaScript Mastery",
+    image: javascript,
+    desc: "Deep dive into JS internals & async patterns",
+    meta: "Core Concepts",
+    link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFuf-27K64l7-hV7o0fr9zx7",
+  },
+  {
+    title: "Algorithm Mastery",
+    image: abdulbari,
+    desc: "Master algorithms and problem-solving",
+    meta: "Advanced Concepts",
+    link: "https://www.youtube.com/playlist?list=PLfqBHhcvlW7-SOGCl7TJxZ4426qBCmCpc",
+  },
+  {
+    title: "Operating System",
+    image: operating,
+    desc: "Understand OS internals and processes",
+    meta: "Core Concepts",
+    link: "https://www.youtube.com/playlist?list=PLDzeHZWIZsTr3nwuTegHLa2qlI81QweYG",
+  },
+];
 
   const stats = [
     { label: "Video Tutorials", value: "200+" },
@@ -119,7 +135,7 @@ const Tutorials = () => {
                   href={item.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="min-w-[250px] group relative rounded-2xl overflow-hidden bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur hover:scale-[1.04] transition-all duration-300 shadow-lg hover:shadow-emerald-500/20"
+                  className="min-w-[300px] group relative rounded-2xl overflow-hidden bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur hover:scale-[1.04] transition-all duration-300 shadow-lg hover:shadow-emerald-500/20"
                 >
                   {/* Image */}
                   <div className="relative h-44 overflow-hidden">

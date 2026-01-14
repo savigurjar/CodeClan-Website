@@ -66,10 +66,11 @@ const userSchema = new Schema({
     problemSolved: {
         type: [{
             type: Schema.Types.ObjectId,
-            ref: "problem",
-            unique: true
+            ref: "problem"
         }],
+        default: []
     },
+
 }, { timestamps: true })
 
 // pre ke bad post chelega , pure mongodb ka ye h

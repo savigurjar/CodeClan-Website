@@ -32,7 +32,6 @@ const register = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
             maxAge: 24 * 60 * 60 * 1000
         });
 
@@ -41,6 +40,7 @@ const register = async (req, res) => {
             message: "User created successfully"
         });
     } catch (err) {
+        console.log(err)
         res.status(400).json({ error: err.message });
     }
 };
