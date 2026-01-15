@@ -16,6 +16,7 @@ const problemRouter = require("./routes/problemCreator");
 const submitRouter = require("./routes/submit");
 const aiRouter = require("./routes/aiChatting")
 const videoRouter = require("./routes/videoCreater");
+const contestRouter = require("./routes/contestRoute");
       
 
 // Middleware
@@ -32,6 +33,8 @@ app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);
 app.use("/ai",aiRouter);
 app.use("/video",videoRouter);
+app.use("/contest", contestRouter);
+
 
 
 // Serve React frontend (for production build)
