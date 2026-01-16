@@ -26,9 +26,9 @@ import Tutorials from "./pages/NavLinks/Tutorials";
 import AdminCreateContest from "./Components/Admin/CreateContest";
 
 // // 🔥 DISCUSS IMPORTS
-// import DiscussList from "./pages/Discuss/DiscussList";
-// import DiscussDetails from "./pages/Discuss/DiscussDetails";
-// import DiscussCreate from "./pages/Discuss/DiscussCreate";
+import DiscussList from "./pages/DiscussionList";
+import DiscussDetails from "./pages/DiscussionPage";
+import DiscussCreate from "./pages/DiscussionCreate";
 
 function App() {
   const dispatch = useDispatch();
@@ -161,7 +161,7 @@ function App() {
       />
 
       {/* DISCUSS (BLOGS) */}
-      {/* <Route path="/discuss" element={<DiscussList />} />
+      <Route path="/discuss" element={<DiscussList />} />
       <Route path="/discuss/:id" element={<DiscussDetails />} />
       <Route
         path="/admin/discuss/create"
@@ -172,7 +172,7 @@ function App() {
             <Navigate to="/" />
           )
         }
-      /> */}
+      />
 
       {/* OTHER ROUTES */}
       <Route path="/forgot-password" element={<ForgotPassword />} />

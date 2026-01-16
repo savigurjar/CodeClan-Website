@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { 
   Search, Plus, ThumbsUp, ThumbsDown, Eye, Clock, 
   User, Tag, Filter, TrendingUp, Flame, Pin, 
   ArrowUp, ArrowDown, TrendingUp as TrendingIcon,
   Zap, ChevronRight
 } from "lucide-react";
-import axiosClient from "../../utils/axiosClient";
-import AppLayout from "../../Components/AppLayout";
-import Animate from "../../animate";
+import axiosClient from "../../src/utils/axiosClient";
+import AppLayout from "../../src/Components/AppLayout";
+import Animate from "../animate"
 import { useSelector } from "react-redux";
 
 const DiscussList = () => {

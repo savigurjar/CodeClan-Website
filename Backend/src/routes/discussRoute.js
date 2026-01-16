@@ -28,9 +28,9 @@ discussRouter.get("/user/my", authenticate, discussController.getUserDiscussions
 // Admin Routes
 // -----------------------------
 
-discussRouter.post("/:id/pin", authenticate, isAdmin, discussController.togglePinDiscussion);
+discussRouter.post("/:id/pin", authenticate,  discussController.togglePinDiscussion);
 
-discussRouter.get("/admin/all", authenticate, isAdmin, async (req, res) => {
+discussRouter.get("/admin/all", authenticate,  async (req, res) => {
   try {
     const Discuss = require("../models/discuss");
 

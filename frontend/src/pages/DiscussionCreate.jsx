@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { Save, X, Tag as TagIcon, AlertCircle, ArrowLeft } from "lucide-react";
-import axiosClient from "../../utils/axiosClient";
-import AppLayout from "../../Components/AppLayout";
-import Animate from "../../animate";
+import axiosClient from "../../src/utils/axiosClient";
+import AppLayout from "../../src/Components/AppLayout";
+import Animate from "../animate"
 
 const DiscussCreate = () => {
   const { id } = useParams(); // For edit mode

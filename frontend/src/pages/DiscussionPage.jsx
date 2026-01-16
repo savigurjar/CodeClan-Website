@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router";
 import { 
   ArrowLeft, ThumbsUp, ThumbsDown, Eye, Clock, 
   User, Tag, Edit, Trash2, Pin, Share, 
   ArrowUp, ArrowDown, Copy, CheckCircle, XCircle,
   AlertTriangle, MoreVertical
 } from "lucide-react";
-import axiosClient from "../../utils/axiosClient";
-import AppLayout from "../../Components/AppLayout";
-import Animate from "../../animate";
+import axiosClient from "../../src/utils/axiosClient";
+import AppLayout from "../../src/Components/AppLayout";
+import Animate from "../animate"
 import { useSelector } from "react-redux";
 
 const DiscussDetails = () => {
