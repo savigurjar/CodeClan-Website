@@ -17,6 +17,7 @@ const submitRouter = require("./routes/submit");
 const aiRouter = require("./routes/aiChatting")
 const videoRouter = require("./routes/videoCreater");
 const contestRouter = require("./routes/contestRoute");
+const discussRouter = require("./routes/discussRoute");
       
 
 // Middleware
@@ -34,6 +35,7 @@ app.use("/submission", submitRouter);
 app.use("/ai",aiRouter);
 app.use("/video",videoRouter);
 app.use("/contest", contestRouter);
+app.use("/discuss", discussRouter);
 
 
 

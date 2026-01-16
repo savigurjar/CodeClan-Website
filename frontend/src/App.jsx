@@ -23,6 +23,7 @@ import AdminVideo from "./Components/Admin/AdminVideo";
 import AdminUpload from "./Components/Admin/AdminUpload";
 import AdminUpdate from "./Components/Admin/AdminUpdate";
 import Tutorials from "./pages/NavLinks/Tutorials";
+import AdminCreateContest from "./Components/Admin/CreateContest";
 
 // // 🔥 DISCUSS IMPORTS
 // import DiscussList from "./pages/Discuss/DiscussList";
@@ -132,6 +133,16 @@ function App() {
         element={
           isAuthenticated && user?.role === "admin" ? (
             <AdminVideo />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/admin/create-contest"
+        element={
+          isAuthenticated && user?.role === "admin" ? (
+            <AdminCreateContest />
           ) : (
             <Navigate to="/" />
           )

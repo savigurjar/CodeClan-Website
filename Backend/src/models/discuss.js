@@ -20,11 +20,27 @@ const discussSchema = new Schema(
       ref: "user",
       required: true,
     },
+    tags: [{
+    type: String,
+    trim: true
+  }],
+   upvotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  }],
+  downvotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  }],
 
     isPublished: {
       type: Boolean,
       default: true,
     },
+    isPinned: {
+    type: Boolean,
+    default: false
+  },
   },
   { timestamps: true }
 );

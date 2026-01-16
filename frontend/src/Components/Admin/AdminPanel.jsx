@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Edit, Trash2, Video,ArrowLeft } from "lucide-react";
+import { Plus, Edit, Trash2, Video,ArrowLeft,Trophy } from "lucide-react";
 import { NavLink,useNavigate } from "react-router";
 import Animate from "../../animate";
 
@@ -31,6 +31,13 @@ const adminOptions = [
     description: "Upload or delete problem videos",
     icon: Video,
     route: "/admin/video",
+  },
+  {
+   id: "contests",
+  title: "Contest Manager",
+  description: "Create and manage coding contests",
+  icon: Trophy,
+  route: "/admin/create-contest",
   },
 ];
 
