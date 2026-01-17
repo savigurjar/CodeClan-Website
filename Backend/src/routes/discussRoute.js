@@ -1,6 +1,7 @@
 const express = require("express");
 const discussController = require("../controllers/discussionController");
 const  authenticate = require("../middleware/userMiddleware");
+const  adminMiddleware = require("../middleware/adminMiddleware");
 
 const discussRouter = express.Router();
 
@@ -28,9 +29,9 @@ discussRouter.get("/user/my", authenticate, discussController.getUserDiscussions
 // Admin Routes
 // -----------------------------
 
-discussRouter.post("/:id/pin", authenticate,  discussController.togglePinDiscussion);
+discussRouter.post("/:id/pin", authenticate, adminMiddleware, discussController.togglePinDiscussion);
 
-discussRouter.get("/admin/all", authenticate,  async (req, res) => {
+discussRouter.get("/admin/all", authenticate, adminMiddleware, async (req, res) => {
   try {
     const Discuss = require("../models/discuss");
 
