@@ -1,5 +1,4 @@
-// [file name]: userAuthenticate.js
-// [file content begin]
+
 const validUser = require("../utils/validator")
 const User = require("../models/users")
 const bcrypt = require("bcrypt")
@@ -365,4 +364,3 @@ const getAllUsers = async (req, res) => {
 };
 
 module.exports = { register, login, getProfile, logout, adminRegister, updateProfile, deleteProfile, changePassword, forgotPassword, resetPassword, getAllUsers }
-// [file content end]
