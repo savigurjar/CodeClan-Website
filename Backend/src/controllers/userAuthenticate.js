@@ -1,5 +1,4 @@
 // [file name]: userAuthenticate.js
-// [file content begin]
 const validUser = require("../utils/validator")
 const User = require("../models/users")
 const bcrypt = require("bcrypt")
@@ -7,7 +6,7 @@ const jwt = require("jsonwebtoken")
 const redisClient = require("../config/redis")
 const crypto = require("crypto");
 const Submission = require("../models/submission");
-
+const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
@@ -16,13 +15,17 @@ const register = async (req, res) => {
 
         req.body.password = await bcrypt.hash(req.body.password, 10);
         req.body.role = "user";
+        req.body.totalPoints = 0;
+        req.body.currentStreak = 0;
+        req.body.maxStreak = 0;
+        req.body.totalActiveDays = 0;
+        req.body.streakHistory = [];
 
         const people = await User.create(req.body);
         const reply = {
             firstName: people.firstName,
             emailId: people.emailId,
             _id: people._id
-
         }
 
         const token = jwt.sign(
@@ -47,9 +50,7 @@ const register = async (req, res) => {
     }
 };
 
-
 const login = async (req, res) => {
-
     try {
         const { emailId, password } = req.body;
 
@@ -63,15 +64,14 @@ const login = async (req, res) => {
             firstName: people.firstName,
             emailId: people.emailId,
             _id: people._id
-
         }
 
         const token = jwt.sign({ _id: people._id, role: people.role, emailId: people.emailId }, process.env.JWT_KEY, { expiresIn: "1d" })
 
         res.cookie("token", token, {
-            httpOnly: true, // prevents JS access
-            secure: process.env.NODE_ENV === "production", // https only in prod
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 24 * 60 * 60 * 1000
         });
 
         res.status(200).json({
@@ -81,12 +81,10 @@ const login = async (req, res) => {
     } catch (err) {
         res.status(401).send("Error " + err)
     }
-
-}
+};
 
 const getProfile = async (req, res) => {
     try {
-        // Include stats in profile response
         const user = req.result;
         const reply = {
             firstName: user.firstName,
@@ -99,84 +97,72 @@ const getProfile = async (req, res) => {
             maxStreak: user.maxStreak || 0,
             totalPoints: user.totalPoints || 0,
             problemSolved: user.problemSolved || [],
-             streakHistory: user.streakHistory || [],
+            streakHistory: user.streakHistory || [],
             _id: user._id
         };
         
         res.status(200).json(reply);
-    }
-    catch (err) {
+    } catch (err) {
         res.status(400).send("Error " + err)
     }
-}
+};
 
 const logout = async (req, res) => {
     try {
-        // validate the token
-        // token add kr denge Redis ke blocklist me
         const { token } = req.cookies;
         if (!token) throw new Error("Token is missing");
 
-        // verify and decode token
         const payload = jwt.verify(token, process.env.JWT_KEY);
 
-        // add token to Redis blocklist
         await redisClient.set(`token:${token}`, "Blocked");
         await redisClient.expireAt(`token:${token}`, payload.exp);
 
-        // clear cookie
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production"
         });
 
         res.status(200).send("Logout Successfully")
-
     } catch (err) {
         res.status(401).send("Error " + err.message);
-
     }
-}
+};
 
 const adminRegister = async (req, res) => {
     try {
-
-        // or 
-        // if(req.result.role != admin) throw new Error("Invalid Credentials")
-
         await validUser(req.body);
-        req.body.password = await bcrypt.hash(req.body.password, 10)
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        req.body.totalPoints = 0;
+        req.body.currentStreak = 0;
+        req.body.maxStreak = 0;
+        req.body.totalActiveDays = 0;
+        req.body.streakHistory = [];
 
         const people = await User.create(req.body);
 
         const token = jwt.sign({ _id: people._id, role: people.role, emailId: people.emailId }, process.env.JWT_KEY, { expiresIn: "1d" })
 
         res.cookie("token", token, {
-            httpOnly: true, // prevents JS access
-            secure: process.env.NODE_ENV === "production", // https only in prod
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 24 * 60 * 60 * 1000
         });
         res.status(201).send("Admin created successfully")
     } catch (err) {
         res.status(401).send("Error " + err)
     }
-}
+};
 
 const deleteProfile = async (req, res) => {
     try {
         const userId = req.result._id;
-        // user Schema se delete 
         await User.findByIdAndDelete(userId);
-        // submission schema se bhi delete
         await Submission.deleteMany({ userId })
-        // delete many means jha jha bhi submission me ye userid h vha ese delete kr do
-
         res.status(200).send("Profile Deleted Successfully")
-    }
-    catch (err) {
+    } catch (err) {
         res.status(400).send("Error " + err)
     }
-}
+};
 
 const changePassword = async (req, res) => {
     try {
@@ -195,11 +181,7 @@ const changePassword = async (req, res) => {
     } catch (err) {
         res.status(400).send("Error " + err)
     }
-}
-
-
-require("dotenv").config();
-
+};
 
 const forgotPassword = async (req, res) => {
   try {
@@ -208,29 +190,26 @@ const forgotPassword = async (req, res) => {
     const user = await User.findOne({ emailId });
 
     if (!user) {
-      // Security: Don't reveal if email exists
       return res.status(200).json({ message: "If email exists, reset link sent" });
     }
 
-    // Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
     user.resetPasswordToken = crypto
       .createHash("sha256")
-      .update(resetToken)
+      .update(resToken)
       .digest("hex");
-    user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    user.resetPasswordExpire = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
 
-    // Gmail transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
-      secure: true, // must be true for port 465
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // your 16-character app password
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -260,7 +239,6 @@ const resetPassword = async (req, res) => {
     try {
         console.log("INCOMING TOKEN:", req.params.token);
 
-        // hash incoming token
         const resetToken = crypto
             .createHash("sha256")
             .update(req.params.token)
@@ -268,18 +246,14 @@ const resetPassword = async (req, res) => {
 
         console.log("HASHED INCOMING TOKEN:", resetToken);
 
-        // find user with matching token and unexpired
         const people = await User.findOne({
             resetPasswordToken: resetToken,
-            resetPasswordExpire: { $gt: new Date() } // ensure Date type
+            resetPasswordExpire: { $gt: new Date() }
         });
 
         if (!people) throw new Error("Invalid or expired token");
 
-        // hash new password
         people.password = await bcrypt.hash(req.body.password, 10);
-
-        // clear reset token fields
         people.resetPasswordToken = undefined;
         people.resetPasswordExpire = undefined;
 
@@ -338,16 +312,14 @@ const updateProfile = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        // Pagination query params (default: page 1, limit 10)
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        // Find users excluding password and reset token fields
         const users = await User.find({}, '-password -resetPasswordToken -resetPasswordExpire')
             .skip(skip)
             .limit(limit)
-            .sort({ createdAt: -1 }); // latest users first
+            .sort({ createdAt: -1 });
 
         const totalUsers = await User.countDocuments();
 
@@ -364,5 +336,95 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-module.exports = { register, login, getProfile, logout, adminRegister, updateProfile, deleteProfile, changePassword, forgotPassword, resetPassword, getAllUsers }
-// [file content end]
+// Helper function to update user streak when solving a problem
+const updateUserStreak = async (userId, problemId) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Check if user was active yesterday
+    const wasActiveYesterday = user.streakHistory.some(day => {
+      const dayDate = new Date(day.date);
+      dayDate.setHours(0, 0, 0, 0);
+      return dayDate.getTime() === yesterday.getTime();
+    });
+    
+    // Find today's streak entry
+    let todayStreak = user.streakHistory.find(day => {
+      const dayDate = new Date(day.date);
+      dayDate.setHours(0, 0, 0, 0);
+      return dayDate.getTime() === today.getTime();
+    });
+    
+    if (!todayStreak) {
+      // Create new streak entry for today
+      todayStreak = {
+        date: today,
+        problemCount: 0,
+        problemsSolved: []
+      };
+      user.streakHistory.push(todayStreak);
+    }
+    
+    // Update today's streak
+    todayStreak.problemCount += 1;
+    if (problemId) {
+      todayStreak.problemsSolved.push(problemId);
+    }
+    
+    // Update current streak
+    if (wasActiveYesterday) {
+      user.currentStreak += 1;
+    } else {
+      user.currentStreak = 1;
+    }
+    
+    // Update max streak if needed
+    if (user.currentStreak > user.maxStreak) {
+      user.maxStreak = user.currentStreak;
+    }
+    
+    // Update total active days
+    user.totalActiveDays = user.streakHistory.length;
+    
+    // Update last active date
+    user.lastActiveDate = today;
+    
+    await user.save();
+  } catch (err) {
+    console.error("Error updating user streak:", err);
+  }
+};
+
+// Update user points when solving a problem
+const updateUserPoints = async (userId, points = 100) => {
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalPoints: points }
+    });
+  } catch (err) {
+    console.error("Error updating user points:", err);
+  }
+};
+
+module.exports = { 
+  register, 
+  login, 
+  getProfile, 
+  logout, 
+  adminRegister, 
+  updateProfile, 
+  deleteProfile, 
+  changePassword, 
+  forgotPassword, 
+  resetPassword, 
+  getAllUsers,
+  updateUserStreak,
+  updateUserPoints 
+};

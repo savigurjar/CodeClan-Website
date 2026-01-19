@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -46,8 +45,7 @@ const userSchema = new Schema({
         trim: true,
         lowercase: true,
         immutable: true
-    }
-    ,
+    },
     password: {
         type: String,
         required: true
@@ -57,7 +55,7 @@ const userSchema = new Schema({
             type: String,
             trim: true
         },
-        x: {                // Twitter / X
+        x: {
             type: String,
             trim: true
         },
@@ -65,19 +63,17 @@ const userSchema = new Schema({
             type: String,
             trim: true
         },
-        github: {           // ✅ NEW
+        github: {
             type: String,
             trim: true
         }
     },
-
     resetPasswordToken: {
         type: String
     },
     resetPasswordExpire: {
         type: Date
     },
-
     problemSolved: {
         type: [{
             type: Schema.Types.ObjectId,
@@ -86,7 +82,7 @@ const userSchema = new Schema({
         default: []
     },
     
-    // NEW FIELDS FOR DASHBOARD STATS
+    // DASHBOARD STATS FIELDS
     totalPoints: {
         type: Number,
         default: 0
@@ -102,17 +98,29 @@ const userSchema = new Schema({
     lastActiveDate: {
         type: Date
     },
-    streakHistory: [streakDaySchema]
+    streakHistory: [streakDaySchema],
+    
+    totalSubmissions: {
+        type: Number,
+        default: 0
+    },
+    acceptedSubmissions: {
+        type: Number,
+        default: 0
+    },
+    totalActiveDays: {
+        type: Number,
+        default: 0
+    }
 
-}, { timestamps: true })
+}, { timestamps: true });
 
-// pre ke bad post chelega , pure mongodb ka ye h
+// Middleware to delete submissions when user is deleted
 userSchema.post('findOneAndDelete', async function (userInfo) {
     if (userInfo) {
         await mongoose.model('submission').deleteMany({ userId: userInfo._id })
     }
-})
-
+});
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;
