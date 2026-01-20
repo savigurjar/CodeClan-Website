@@ -444,6 +444,108 @@ const getSolvedProblems = async (req, res) => {
   }
 };
 
+// Add this function to userAuthenticate.js after getSolvedProblems
+const getUserStats = async (req, res) => {
+  try {
+    const user = req.result;
+    
+    // Get solved problems count
+    const solvedCount = user.problemSolved ? user.problemSolved.length : 0;
+    
+    // Calculate total points
+    const totalPoints = solvedCount * 100;
+    
+    // Get submissions for accuracy calculation
+    const totalSubmissions = await Submission.countDocuments({ userId: user._id });
+    const acceptedSubmissions = await Submission.countDocuments({ 
+      userId: user._id, 
+      status: "accepted" 
+    });
+    
+    const accuracy = totalSubmissions > 0 
+      ? Math.round((acceptedSubmissions / totalSubmissions) * 100)
+      : 0;
+    
+    // Calculate total active days from streakHistory
+    const totalActiveDays = user.streakHistory ? user.streakHistory.length : 0;
+    
+    // Calculate submissions in past year
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
+    const submissionsPastYear = await Submission.countDocuments({
+      userId: user._id,
+      createdAt: { $gte: oneYearAgo }
+    });
+    
+    // Get total users for ranking
+    const totalUsers = await User.countDocuments();
+    
+    // Calculate rank based on total points
+    const usersWithMorePoints = await User.countDocuments({
+      totalPoints: { $gt: user.totalPoints || 0 }
+    });
+    
+    const rank = usersWithMorePoints + 1;
+    const percentile = totalUsers > 0 ? Math.round((rank / totalUsers) * 100) : 0;
+    
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalProblems: solvedCount,
+        totalPoints: user.totalPoints || totalPoints,
+        currentStreak: user.currentStreak || 0,
+        maxStreak: user.maxStreak || 0,
+        accuracy,
+        totalSubmissions,
+        acceptedSubmissions,
+        totalActiveDays,
+        submissionsPastYear,
+        rank,
+        totalUsers,
+        percentile,
+        streakHistory: user.streakHistory || []
+      }
+    });
+  } catch (err) {
+    console.error("Stats error:", err);
+    res.status(500).json({ 
+      success: false, 
+      message: err.message 
+    });
+  }
+};
+
+// Add this function for rank endpoint
+const getUserRank = async (req, res) => {
+  try {
+    const user = req.result;
+    
+    // Get total users count
+    const totalUsers = await User.countDocuments();
+    
+    // Calculate rank based on total points
+    const usersWithMorePoints = await User.countDocuments({
+      totalPoints: { $gt: user.totalPoints || 0 }
+    });
+    
+    const rank = usersWithMorePoints + 1;
+    const percentile = totalUsers > 0 ? Math.round((rank / totalUsers) * 100) : 0;
+    
+    res.status(200).json({
+      success: true,
+      rank,
+      totalUsers,
+      percentile
+    });
+  } catch (err) {
+    console.error("Rank error:", err);
+    res.status(500).json({ 
+      success: false, 
+      message: err.message
+    });
+  }
+};
 
 module.exports = { 
   register, 
@@ -458,6 +560,8 @@ module.exports = {
   resetPassword, 
   getAllUsers,
   updateUserStreak,
-  updateUserPoints ,
-  getSolvedProblems
+  updateUserPoints,
+  getSolvedProblems,
+  getUserStats,      // Add this
+  getUserRank        // Add this
 };

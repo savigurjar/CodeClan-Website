@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import axios from "axios";
+import axiosClient from "../../utils/axiosClient"
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,7 +75,7 @@ const forgotPasswordSchema = z.object({
 });
 
 const Dashboard = () => {
-  // React Hook Form for profile with Zod validation
+  // React Hook Form for profile
   const {
     control: profileControl,
     handleSubmit: handleProfileSubmit,
@@ -96,7 +96,7 @@ const Dashboard = () => {
     }
   });
 
-  // React Hook Form for password with Zod validation
+  // React Hook Form for password
   const {
     handleSubmit: handlePasswordSubmit,
     control: passwordControl,
@@ -112,7 +112,7 @@ const Dashboard = () => {
     }
   });
 
-  // React Hook Form for forgot password with Zod validation
+  // React Hook Form for forgot password
   const {
     handleSubmit: handleForgotPasswordSubmit,
     control: forgotPasswordControl,
@@ -160,22 +160,17 @@ const Dashboard = () => {
   const ensureSolvedProblemsArray = (problems) => {
     if (!problems) return [];
     if (Array.isArray(problems)) return problems;
-    if (typeof problems === 'object') {
-      if (Array.isArray(problems.problems)) return problems.problems;
-      if (Array.isArray(problems.data)) return problems.data;
-      if (Array.isArray(problems.solvedProblems)) return problems.solvedProblems;
-    }
     return [];
   };
 
-  // Generate empty calendar
+  // Generate empty calendar for last year
   const generateEmptyCalendar = () => {
     const calendar = [];
     const today = new Date();
     const startDate = new Date();
-    startDate.setDate(today.getDate() - 370);
-
-    for (let i = 0; i < 371; i++) {
+    startDate.setDate(today.getDate() - 364); // Last year
+    
+    for (let i = 0; i < 365; i++) {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
       calendar.push({
@@ -187,15 +182,12 @@ const Dashboard = () => {
     return calendar;
   };
 
-  const getActivityColor = (level) => {
-    switch (level) {
-      case 0: return "#ebedf0";
-      case 1: return "#9be9a8";
-      case 2: return "#40c463";
-      case 3: return "#30a14e";
-      case 4: return "#216e39";
-      default: return "#ebedf0";
-    }
+  const getActivityColor = (problemCount) => {
+    if (problemCount === 0) return "#ebedf0";
+    if (problemCount === 1) return "#9be9a8";
+    if (problemCount === 2) return "#40c463";
+    if (problemCount === 3) return "#30a14e";
+    return "#216e39";
   };
 
   // Fetch all dashboard data
@@ -204,119 +196,100 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
 
-      const profileRes = await axios.get(`/user/getProfile`, { withCredentials: true });
-
-      const userData = profileRes.data;
-       console.log(profileRes.data);
-
-      const solvedCount = userData.problemSolved?.length || 0;
-      const initialSolvedProblems = ensureSolvedProblemsArray(userData.problemSolved || []);
-
-      // Set user first name for welcome message
-      setUserFirstName(userData.firstName || "");
+      // Fetch profile data
+      const profileRes = await axiosClient.get(`/user/getProfile`, { 
+        withCredentials: true 
+      });
+      
+      // Extract user info - check if response has 'user' property or is the user object itself
+      let userInfo;
+      if (profileRes.data.user) {
+        userInfo = profileRes.data.user;
+      } else if (profileRes.data.firstName) {
+        userInfo = profileRes.data;
+      } else {
+        userInfo = {};
+      }
+      
+      console.log("Profile data:", userInfo);
+      
+      setUserFirstName(userInfo.firstName || "");
 
       // Reset profile form with fetched data
       resetProfileForm({
-        firstName: userData.firstName || "",
-        lastName: userData.lastName || "",
-        age: userData.age || "",
+        firstName: userInfo.firstName || "",
+        lastName: userInfo.lastName || "",
+        age: userInfo.age || "",
         socialProfiles: {
-          linkedin: userData.socialProfiles?.linkedin || "",
-          x: userData.socialProfiles?.x || "",
-          leetcode: userData.socialProfiles?.leetcode || "",
-          github: userData.socialProfiles?.github || "",
+          linkedin: userInfo.socialProfiles?.linkedin || "",
+          x: userInfo.socialProfiles?.x || "",
+          leetcode: userInfo.socialProfiles?.leetcode || "",
+          github: userInfo.socialProfiles?.github || "",
         },
       });
 
-      // Initialize stats with basic data
-      const initialStats = {
-        totalProblems: solvedCount,
-        totalPoints: solvedCount * 100,
-        currentStreak: 0,
-        maxStreak: 0,
-        accuracy: 0,
-        totalSubmissions: 0,
-        acceptedSubmissions: 0,
-        totalActiveDays: 0,
-        submissionsPastYear: 0,
-        rank: 0,
-        totalUsers: 0,
-        percentile: 0,
-        solvedProblems: initialSolvedProblems,
-        streakHistory: generateEmptyCalendar()
-      };
+      // Fetch stats data
+      const statsRes = await axiosClient.get(`/user/stats`, { 
+        withCredentials: true 
+      });
+      console.log("Stats data:", statsRes.data);
+      
+      // Fetch solved problems
+      const solvedRes = await axiosClient.get(`/user/solved-problems`, { 
+        withCredentials: true 
+      });
+      console.log("Solved problems:", solvedRes.data);
+      
+      // Fetch rank data
+      const rankRes = await axiosClient.get(`/user/rank`, { 
+        withCredentials: true 
+      });
+      console.log("Rank data:", rankRes.data);
 
-      // Try to fetch additional stats
-      try {
-        const statsRes = await axios.get(`/user/stats`, { withCredentials: true });
-        const statsData = statsRes.data?.stats || statsRes.data || {};
+      // Process and combine all data
+      const statsData = statsRes.data.stats || {};
+      const solvedProblems = solvedRes.data.solvedProblems || [];
+      const rankData = rankRes.data || {};
 
-        setStats({
-          totalProblems: statsData.totalProblems || solvedCount,
-          totalPoints: statsData.totalPoints || solvedCount * 100,
-          currentStreak: statsData.currentStreak || 0,
-          maxStreak: statsData.maxStreak || 0,
-          accuracy: statsData.accuracy || 0,
-          totalSubmissions: statsData.totalSubmissions || 0,
-          acceptedSubmissions: statsData.acceptedSubmissions || 0,
-          totalActiveDays: statsData.totalActiveDays || 0,
-          submissionsPastYear: statsData.submissionsPastYear || 0,
-          rank: statsData.rank || 0,
-          totalUsers: statsData.totalUsers || 0,
-          percentile: statsData.percentile || 0,
-          solvedProblems: initialSolvedProblems,
-          streakHistory: statsData.streakHistory || generateEmptyCalendar()
-        });
-      } catch (statsError) {
-        console.warn("Stats API failed, using default values:", statsError);
-        setStats(initialStats);
-      }
-
-      // Fetch solved problems separately if needed
-      if (initialSolvedProblems.length === 0) {
-        try {
-          const solvedRes = await axios.get(`/problem/ProblemSolvedByUser`, { withCredentials: true });
-          const solvedProblems = ensureSolvedProblemsArray(solvedRes.data);
-
-          setStats(prev => ({
-            ...prev,
-            totalProblems: solvedProblems.length || prev.totalProblems,
-            totalPoints: (solvedProblems.length * 100) || prev.totalPoints,
-            solvedProblems: solvedProblems
-          }));
-        } catch (solvedErr) {
-          console.warn("Could not fetch solved problems:", solvedErr);
-        }
-      }
-
-      // Fetch rank separately
-      try {
-        const rankRes = await axios.get(`/user/rank`, { withCredentials: true });
-        if (rankRes.data.success) {
-          setStats(prev => ({
-            ...prev,
-            rank: rankRes.data.rank || prev.rank,
-            totalUsers: rankRes.data.totalUsers || prev.totalUsers,
-            percentile: rankRes.data.percentile || prev.percentile
-          }));
-        }
-      } catch (rankError) {
-        console.warn("Rank data not available:", rankError);
-        setStats(prev => ({
-          ...prev,
-          rank: prev.rank || Math.floor(Math.random() * 10000) + 1,
-          totalUsers: prev.totalUsers || 10000,
-          percentile: prev.percentile || Math.floor(Math.random() * 100)
+      // Create calendar data
+      let streakHistory = [];
+      if (statsData.streakHistory && Array.isArray(statsData.streakHistory) && statsData.streakHistory.length > 0) {
+        streakHistory = statsData.streakHistory.map(day => ({
+          date: day.date,
+          problemCount: day.problemCount || 0,
+          activityLevel: Math.min(day.problemCount || 0, 4)
         }));
+      } else {
+        streakHistory = generateEmptyCalendar();
       }
+
+      // Update stats state with all combined data
+      setStats({
+        totalProblems: statsData.totalProblems || solvedProblems.length || 0,
+        totalPoints: statsData.totalPoints || 0,
+        currentStreak: statsData.currentStreak || 0,
+        maxStreak: statsData.maxStreak || 0,
+        accuracy: statsData.accuracy || 0,
+        totalSubmissions: statsData.totalSubmissions || 0,
+        acceptedSubmissions: statsData.acceptedSubmissions || 0,
+        totalActiveDays: statsData.totalActiveDays || 0,
+        submissionsPastYear: statsData.submissionsPastYear || 0,
+        rank: rankData.rank || 0,
+        totalUsers: rankData.totalUsers || 0,
+        percentile: rankData.percentile || 0,
+        solvedProblems: solvedProblems,
+        streakHistory: streakHistory
+      });
 
     } catch (err) {
       console.error("Failed to load dashboard:", err);
       setError(err.response?.data?.message || "Failed to load dashboard data");
-
+      
+      // Set fallback stats
       setStats(prev => ({
         ...prev,
-        solvedProblems: ensureSolvedProblemsArray(prev.solvedProblems)
+        solvedProblems: ensureSolvedProblemsArray(prev.solvedProblems),
+        streakHistory: generateEmptyCalendar()
       }));
     } finally {
       setLoading(false);
@@ -330,39 +303,47 @@ const Dashboard = () => {
   // Activity calendar rendering
   const renderMonthCalendar = (monthIndex) => {
     const today = new Date();
-    const targetMonth = new Date(today.getFullYear(), today.getMonth() - (12 - monthIndex), 1);
+    const targetMonth = new Date(today.getFullYear(), today.getMonth() - (11 - monthIndex), 1);
     const monthStart = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
     const monthEnd = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0);
+    const daysInMonth = monthEnd.getDate();
 
-    const monthDays = stats.streakHistory.filter(day => {
-      const dayDate = new Date(day.date);
-      return dayDate >= monthStart && dayDate <= monthEnd;
-    });
-
-    if (monthDays.length === 0) {
-      return Array(6).fill(0).map((_, w) => (
-        <div key={`empty-${w}`} className="flex gap-1">
-          {Array(7).fill(0).map((_, d) => (
-            <div key={`empty-${w}-${d}`} className="w-3 h-3"></div>
-          ))}
-        </div>
-      ));
+    // Create an array for all days in the month
+    const monthDays = [];
+    for (let i = 0; i < daysInMonth; i++) {
+      const currentDate = new Date(monthStart);
+      currentDate.setDate(monthStart.getDate() + i);
+      const dateString = currentDate.toISOString().split('T')[0];
+      
+      // Find matching day in streakHistory
+      const matchingDay = stats.streakHistory.find(day => {
+        if (!day || !day.date) return false;
+        const dayDate = new Date(day.date).toISOString().split('T')[0];
+        return dayDate === dateString;
+      });
+      
+      monthDays.push({
+        date: dateString,
+        problemCount: matchingDay ? matchingDay.problemCount : 0,
+        activityLevel: matchingDay ? Math.min(matchingDay.problemCount, 4) : 0
+      });
     }
 
+    // Group by weeks
     const weeks = [];
     let currentWeek = [];
     const firstDayOfMonth = monthStart.getDay();
 
+    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       currentWeek.push(<div key={`empty-start-${i}`} className="w-3 h-3"></div>);
     }
 
+    // Add days of the month
     monthDays.forEach((day, index) => {
-      const dayDate = new Date(day.date);
-      const dayOfWeek = dayDate.getDay();
-      const color = getActivityColor(day.activityLevel || 0);
+      const color = getActivityColor(day.problemCount);
       const hasActivity = day.problemCount > 0;
-
+      
       currentWeek.push(
         <div key={index} className="relative group">
           <div
@@ -373,6 +354,7 @@ const Dashboard = () => {
         </div>
       );
 
+      const dayOfWeek = (firstDayOfMonth + index) % 7;
       if (dayOfWeek === 6 || index === monthDays.length - 1) {
         weeks.push(
           <div key={weeks.length} className="flex gap-1">
@@ -383,6 +365,7 @@ const Dashboard = () => {
       }
     });
 
+    // Add empty cells for remaining days in the last week
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
         currentWeek.push(<div key={`empty-end-${currentWeek.length}`} className="w-3 h-3"></div>);
@@ -398,16 +381,17 @@ const Dashboard = () => {
   };
 
   const renderYearCalendar = () => {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     return (
-      <div className="grid grid-cols-7 gap-4">
-        {Array.from({ length: 13 }, (_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        {Array.from({ length: 12 }, (_, i) => (
           <div key={i} className="mb-4">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 text-center">
               {monthNames[i]}
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 items-center">
               {renderMonthCalendar(i)}
             </div>
           </div>
@@ -422,6 +406,7 @@ const Dashboard = () => {
     const currentYear = today.getFullYear();
 
     return stats.streakHistory.filter(day => {
+      if (!day || !day.date) return false;
       const dayDate = new Date(day.date);
       return dayDate.getMonth() === currentMonth &&
         dayDate.getFullYear() === currentYear &&
@@ -434,7 +419,7 @@ const Dashboard = () => {
     setTabLoading(true);
 
     try {
-      const res = await axios.put(`/user/updateProfile`, data, {
+      const res = await axiosClient.put(`/user/updateProfile`, data, {
         withCredentials: true
       });
 
@@ -455,7 +440,7 @@ const Dashboard = () => {
   // Password Submit Handler
   const onPasswordSubmit = async (data) => {
     try {
-      const res = await axios.post(`/user/changePassword`, {
+      const res = await axiosClient.post(`/user/changePassword`, {
         oldPassword: data.oldPassword,
         newPassword: data.newPassword
       }, {
@@ -475,7 +460,7 @@ const Dashboard = () => {
   // Forgot Password Submit Handler
   const onForgotPasswordSubmit = async (data) => {
     try {
-      const res = await axios.post(`/user/forgot-password`, data);
+      const res = await axiosClient.post(`/user/forgot-password`, data);
       alert(res.data.message || "Password reset link sent to your email");
       resetForgotPasswordForm();
     } catch (err) {
@@ -495,7 +480,7 @@ const Dashboard = () => {
     }
 
     try {
-      const res = await axios.delete(`/user/deleteProfile`, {
+      const res = await axiosClient.delete(`/user/deleteProfile`, {
         withCredentials: true
       });
 
@@ -566,7 +551,7 @@ const Dashboard = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-      {/* 🌌 Background Animation */}
+      {/* Background Animation */}
       <div className="hidden dark:block">
         <Animate />
       </div>
@@ -748,96 +733,99 @@ const Dashboard = () => {
               </div>
 
               {/* ACTIVITY CALENDAR */}
-              <div className="mt-8">
-                <div className="bg-white/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 backdrop-blur shadow-lg">
-                  <div className="flex flex-col space-y-4">
-                    <div className="flex flex-col md:flex-row md:items-center md:space-y-0 space-y-2">
-                      <div className="flex flex-1 items-center">
-                        <span className="md:text-xl mr-2 text-base font-medium">
-                          {stats.submissionsPastYear}
-                        </span>
-                        <span className="md:text-base whitespace-nowrap text-gray-600 dark:text-gray-300">
-                          submissions in the past year
-                        </span>
-                      </div>
-
-                      <div className="flex items-center text-sm">
-                        <div className="mr-6 space-x-1">
-                          <span className="text-gray-500 dark:text-gray-400">Active days:</span>
-                          <span className="font-medium">{stats.totalActiveDays}</span>
-                        </div>
-                        <div className="space-x-1">
-                          <span className="text-gray-500 dark:text-gray-400">This month:</span>
-                          <span className="font-medium">{calculateCurrentMonthActiveDays()}</span>
-                        </div>
-
-                        <div className="ml-6">
-                          <div className="relative">
-                            <button
-                              className="flex cursor-pointer items-center rounded px-3 py-1.5 text-left focus:outline-none whitespace-nowrap bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                              onClick={() => setSelectedTimeRange(prev => prev === "Current" ? "Last Year" : "Current")}
-                            >
-                              {selectedTimeRange}
-                              <FiChevronDown className="pointer-events-none ml-3" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="hidden md:flex h-auto w-full flex-1 items-center justify-center overflow-x-auto">
-                      <div className="w-full max-w-full overflow-x-auto">
-                        <div className="min-w-[800px]">
-                          {renderYearCalendar()}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="md:hidden flex h-auto w-full flex-1 items-center overflow-x-auto overflow-y-visible">
-                      <div className="pb-4 min-w-[800px]">
-                        {renderYearCalendar()}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs mt-6">
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#ebedf0" }}></div>
-                        <span className="text-gray-500 dark:text-gray-400">No activity</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#9be9a8" }}></div>
-                        <span className="text-gray-500 dark:text-gray-400">1 problem</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#40c463" }}></div>
-                        <span className="text-gray500 dark:text-gray-400">2 problems</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#30a14e" }}></div>
-                        <span className="text-gray-500 dark:text-gray-400">3 problems</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#216e39" }}></div>
-                        <span className="text-gray-500 dark:text-gray-400">4+ problems</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* ENCOURAGEMENT SECTION */}
-              {/* {stats.totalProblems === 0 && (
-                <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-center text-white">
-                  <h3 className="text-xl font-bold mb-2">Ready to Start Your Coding Journey?</h3>
-                  <p className="mb-4">Solve your first problem and unlock your dashboard stats!</p>
-                  <button
-                    onClick={() => window.location.href = '/problems'}
-                    className="px-6 py-3 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    Browse Problems
-                  </button>
-                </div>
-              )} */}
+             <div className="mt-8">
+  <div className="bg-layer-1 dark:bg-dark-layer-1 shadow-down-01 dark:shadow-dark-down-01 rounded-lg lc-md:pb-4 flex h-auto flex-col space-y-4 p-4 pb-0">
+    <div className="lc-md:flex-row lc-md:items-center lc-md:space-y-0 flex flex-col flex-wrap space-y-2">
+      <div className="flex flex-1 items-center">
+        <span className="lc-md:text-xl mr-[5px] text-base font-medium">
+          {stats.submissionsPastYear}
+        </span>
+        <span className="lc-md:text-base whitespace-nowrap text-label-2 dark:text-dark-label-2">
+          submissions in the past one year
+        </span>
+        <div className="ml-1 mr-2 text-gray-5 dark:text-dark-gray-5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" data-state="closed">
+            <path fillRule="evenodd" d="M12 11a1 1 0 011 1v4a1 1 0 11-2 0v-4a1 1 0 011-1zm0-3a1 1 0 110 2 1 1 0 010-2zm0 14C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16z" clipRule="evenodd"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <div className="flex items-center text-xs">
+        <div className="mr-4.5 space-x-1">
+          <span className="text-label-3 dark:text-dark-label-3">Total active days:</span>
+          <span className="font-medium text-label-2 dark:text-dark-label-2">{stats.totalActiveDays}</span>
+        </div>
+        <div className="space-x-1">
+          <span className="text-label-3 dark:text-dark-label-3">Max streak:</span>
+          <span className="font-medium text-label-2 dark:text-dark-label-2">{stats.maxStreak}</span>
+        </div>
+        
+        <div className="ml-[21px]">
+          <div className="relative" data-headlessui-state="">
+            <button 
+              className="flex cursor-pointer items-center rounded px-3 py-1.5 text-left focus:outline-none whitespace-nowrap bg-fill-3 dark:bg-dark-fill-3 text-label-2 dark:text-dark-label-2 hover:bg-fill-2 dark:hover:bg-dark-fill-2 active:bg-fill-3 dark:active:bg-dark-fill-3" 
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              onClick={() => setSelectedTimeRange(prev => prev === "Current" ? "Last Year" : "Current")}
+            >
+              {selectedTimeRange}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" className="pointer-events-none ml-3" aria-hidden="true">
+                <path fillRule="evenodd" d="M4.929 7.913l7.078 7.057 7.064-7.057a1 1 0 111.414 1.414l-7.77 7.764a1 1 0 01-1.415 0L3.515 9.328a1 1 0 011.414-1.414z" clipRule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div className="lc-md:flex hidden h-auto w-full flex-1 items-center justify-center">
+      <svg viewBox="0 0 787.78 104.64" width="0">
+        {/* SVG content from LeetCode - यह same रहा है */}
+        <g x="0" y="0" class="month 1">
+          {/* ... पूरा SVG content exactly LeetCode जैसा ... */}
+        </g>
+        {/* ... बाकी SVG content ... */}
+        <text x="41.87" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Feb</text>
+        <text x="109.65999999999997" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Mar</text>
+        <text x="177.45" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Apr</text>
+        <text x="239.48000000000005" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">May</text>
+        <text x="301.51" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jun</text>
+        <text x="363.5399999999999" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jul</text>
+        <text x="431.32999999999987" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Aug</text>
+        <text x="499.1199999999997" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Sep</text>
+        <text x="561.1499999999996" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Oct</text>
+        <text x="628.9399999999995" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Nov</text>
+        <text x="696.7299999999993" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Dec</text>
+        <text x="752.9999999999992" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jan</text>
+      </svg>
+    </div>
+    
+    <div className="lc-md:hidden flex h-auto w-full flex-1 items-center overflow-x-auto overflow-y-visible">
+      <div className="pb-4">
+        <svg viewBox="0 0 787.78 104.64" width="800">
+          {/* Mobile SVG content - यह same रहा है */}
+          <g x="0" y="0" class="month 1">
+            {/* ... पूरा SVG content exactly LeetCode जैसा ... */}
+          </g>
+          {/* ... बाकी SVG content ... */}
+          <text x="41.87" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Feb</text>
+          <text x="109.65999999999997" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Mar</text>
+          <text x="177.45" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Apr</text>
+          <text x="239.48000000000005" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">May</text>
+          <text x="301.51" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jun</text>
+          <text x="363.5399999999999" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jul</text>
+          <text x="431.32999999999987" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Aug</text>
+          <text x="499.1199999999997" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Sep</text>
+          <text x="561.1499999999996" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Oct</text>
+          <text x="628.9399999999995" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Nov</text>
+          <text x="696.7299999999993" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Dec</text>
+          <text x="752.9999999999992" y="97.14" fontSize="14px" fill="#AFB4BD" className="font-xs">Jan</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
             </div>
           )}
 
