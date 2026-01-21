@@ -8,21 +8,21 @@ import Animate from "../animate"
 const DiscussCreate = () => {
   const { id } = useParams(); // For edit mode
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  
+
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     tags: []
   });
-  
+
   const [newTag, setNewTag] = useState("");
-  
+
   const popularTags = [
-    "DSA", "JavaScript", "React", "Node.js", "Python", 
+    "DSA", "JavaScript", "React", "Node.js", "Python",
     "System Design", "Interview", "Career", "Algorithms",
     "Web Development", "Database", "API", "Security", "C++",
     "Java", "HTML/CSS", "DevOps", "Machine Learning", "AI",
@@ -104,7 +104,7 @@ const DiscussCreate = () => {
         // Create new discussion
         await axiosClient.post("/discuss", formData);
       }
-      
+
       navigate("/discuss");
     } catch (error) {
       setError(error.response?.data?.error || "Something went wrong");
@@ -126,28 +126,29 @@ const DiscussCreate = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <AppLayout><div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
         <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
           <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
             {id ? "Loading discussion..." : "Loading editor..."}
           </p>
         </div>
-      </div>
+      </div></AppLayout>
+
     );
   }
 
   return (
     <AppLayout>
       <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-        
+
         {/* Background Animation */}
         <div className="hidden dark:block">
           <Animate />
         </div>
 
         <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-8 max-w-4xl mx-auto">
-          
+
           {/* Header */}
           <div className="mb-8">
             <button
@@ -157,7 +158,7 @@ const DiscussCreate = () => {
               <ArrowLeft size={18} />
               Back to Discussions
             </button>
-            
+
             <h1 className="text-3xl font-bold mb-2">
               {id ? "Edit Discussion" : "Create New Discussion"}
             </h1>
@@ -178,7 +179,7 @@ const DiscussCreate = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="space-y-6">
-            
+
             {/* Title */}
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -189,7 +190,7 @@ const DiscussCreate = () => {
                 required
                 maxLength="200"
                 value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="Enter a clear and descriptive title"
                 className="w-full px-4 py-3 rounded-lg bg-white/70 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur focus:outline-none focus:ring-2 focus:ring-emerald-400"
               />
@@ -204,7 +205,7 @@ const DiscussCreate = () => {
               <label className="block text-sm font-medium mb-2">
                 Tags (Optional)
               </label>
-              
+
               {/* Tag Input */}
               <div className="flex gap-2 mb-3">
                 <input
@@ -223,7 +224,7 @@ const DiscussCreate = () => {
                   Add
                 </button>
               </div>
-              
+
               {/* Selected Tags */}
               <div className="flex flex-wrap gap-2 mb-3">
                 {formData.tags.map((tag) => (
@@ -243,7 +244,7 @@ const DiscussCreate = () => {
                   </span>
                 ))}
               </div>
-              
+
               {/* Popular Tags Suggestions */}
               <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                 Popular tags (click to add):
@@ -255,7 +256,7 @@ const DiscussCreate = () => {
                     type="button"
                     onClick={() => {
                       if (!formData.tags.includes(tag) && formData.tags.length < 10) {
-                        setFormData({...formData, tags: [...formData.tags, tag]});
+                        setFormData({ ...formData, tags: [...formData.tags, tag] });
                       }
                     }}
                     disabled={formData.tags.includes(tag) || formData.tags.length >= 10}
@@ -280,7 +281,7 @@ const DiscussCreate = () => {
                 rows="12"
                 maxLength="5000"
                 value={formData.content}
-                onChange={(e) => setFormData({...formData, content: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 placeholder="Write your discussion here... You can use markdown formatting"
                 className="w-full px-4 py-3 rounded-lg bg-white/70 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur focus:outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
               />
@@ -298,12 +299,12 @@ const DiscussCreate = () => {
                 className="flex items-center gap-2 px-6 py-3 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Save size={18} />
-                {submitting 
-                  ? (id ? "Saving..." : "Creating...") 
+                {submitting
+                  ? (id ? "Saving..." : "Creating...")
                   : (id ? "Save Changes" : "Create Discussion")
                 }
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => navigate("/discuss")}

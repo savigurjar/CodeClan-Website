@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { 
-  Search, Plus, ThumbsUp, ThumbsDown, Eye, Clock, 
-  User, Tag, Filter, TrendingUp, Flame, Pin, 
+import {
+  Search, Plus, ThumbsUp, ThumbsDown, Eye, Clock,
+  User, Tag, Filter, TrendingUp, Flame, Pin,
   ArrowUp, ArrowDown, TrendingUp as TrendingIcon,
   Zap, ChevronRight
 } from "lucide-react";
@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 const DiscussList = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  
+
   const [discussions, setDiscussions] = useState([]);
   const [pinnedDiscussions, setPinnedDiscussions] = useState([]);
   const [trendingDiscussions, setTrendingDiscussions] = useState([]);
@@ -44,7 +44,7 @@ const DiscussList = () => {
   ];
 
   const popularTags = [
-    "DSA", "JavaScript", "React", "Node.js", "Python", 
+    "DSA", "JavaScript", "React", "Node.js", "Python",
     "System Design", "Interview", "Career", "Algorithms",
     "Web Development", "Database", "API", "Security", "C++",
     "Java", "HTML/CSS", "DevOps", "Machine Learning", "AI"
@@ -60,7 +60,7 @@ const DiscussList = () => {
   const fetchDiscussions = async () => {
     try {
       setLoading(true);
-      
+
       const params = new URLSearchParams({
         page: pagination.page,
         limit: 12,
@@ -71,13 +71,13 @@ const DiscussList = () => {
       });
 
       const { data } = await axiosClient.get(`/discuss?${params}`);
-      
+
       // Add user vote status
       const discussionsWithVoteStatus = data.discussions.map(disc => {
         const userVote = isAuthenticated ? getUserVoteStatus(disc) : "none";
         return { ...disc, userVote };
       });
-      
+
       setDiscussions(discussionsWithVoteStatus);
       setPagination(data.pagination);
     } catch (error) {
@@ -122,7 +122,7 @@ const DiscussList = () => {
 
   const getUserVoteStatus = (discussion) => {
     if (!user || !discussion.upvotes || !discussion.downvotes) return "none";
-    
+
     const userId = user._id || user.id;
     if (discussion.upvotes.some(uv => uv._id === userId || uv === userId)) {
       return "upvote";
@@ -135,7 +135,7 @@ const DiscussList = () => {
 
   const handleVote = async (discussionId, type, e) => {
     e.stopPropagation();
-    
+
     if (!isAuthenticated) {
       navigate("/login");
       return;
@@ -145,7 +145,7 @@ const DiscussList = () => {
 
     try {
       const { data } = await axiosClient.post(`/discuss/${discussionId}/vote`, { type });
-      
+
       // Update local state
       setDiscussions(discussions.map(disc => {
         if (disc._id === discussionId) {
@@ -197,18 +197,18 @@ const DiscussList = () => {
 
   const handlePin = async (discussionId, e) => {
     e.stopPropagation();
-    
+
     if (!isAuthenticated || user.role !== "admin") {
       return;
     }
 
     try {
       await axiosClient.post(`/discuss/${discussionId}/pin`);
-      
+
       // Refresh discussions
       fetchDiscussions();
       fetchPinnedDiscussions();
-      
+
       alert("Pin status updated");
     } catch (error) {
       console.error("Error pinning:", error);
@@ -237,13 +237,13 @@ const DiscussList = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setPagination({...pagination, page: 1});
+    setPagination({ ...pagination, page: 1 });
     fetchDiscussions();
   };
 
   const handleTagClick = (tag) => {
-    setFilters({...filters, tag});
-    setPagination({...pagination, page: 1});
+    setFilters({ ...filters, tag });
+    setPagination({ ...pagination, page: 1 });
   };
 
   const clearFilters = () => {
@@ -253,7 +253,7 @@ const DiscussList = () => {
       showPinned: true
     });
     setSearch("");
-    setPagination({...pagination, page: 1});
+    setPagination({ ...pagination, page: 1 });
   };
 
   const getScoreColor = (score) => {
@@ -264,28 +264,28 @@ const DiscussList = () => {
 
   if (loading && discussions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <AppLayout> <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
         <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
           <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
             Loading discussions...
           </p>
         </div>
-      </div>
+      </div></AppLayout>
     );
   }
 
   return (
     <AppLayout>
       <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-        
+
         {/* Background Animation */}
         <div className="hidden dark:block">
           <Animate />
         </div>
 
         <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
-          
+
           {/* Header */}
           <div className="mb-10">
             <h1 className="text-4xl font-extrabold text-center mb-3">
@@ -294,30 +294,30 @@ const DiscussList = () => {
             <p className="text-center text-black/70 dark:text-white/70 mb-8 max-w-2xl mx-auto">
               Vote, share, and discuss programming topics
             </p>
-            
+
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               {[
-                { 
-                  label: "Total Discussions", 
+                {
+                  label: "Total Discussions",
                   value: stats.totalDiscussions || "0",
                   icon: TrendingIcon,
                   color: "text-blue-600 dark:text-blue-400"
                 },
-                { 
-                  label: "Pinned", 
+                {
+                  label: "Pinned",
                   value: stats.pinnedCount || "0",
                   icon: Pin,
                   color: "text-yellow-600 dark:text-yellow-400"
                 },
-                { 
-                  label: "Active Authors", 
+                {
+                  label: "Active Authors",
                   value: stats.uniqueAuthors || "0",
                   icon: User,
                   color: "text-emerald-600 dark:text-emerald-400"
                 },
-                { 
-                  label: "Trending Now", 
+                {
+                  label: "Trending Now",
                   value: trendingDiscussions.length || "0",
                   icon: Flame,
                   color: "text-orange-600 dark:text-orange-400"
@@ -346,10 +346,10 @@ const DiscussList = () => {
 
           {/* Main Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
+
             {/* Left Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              
+
               {/* Search */}
               <div className="bg-white/70 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4 backdrop-blur">
                 <form onSubmit={handleSearch}>
@@ -391,12 +391,11 @@ const DiscussList = () => {
                     return (
                       <button
                         key={option.value}
-                        onClick={() => setFilters({...filters, sortBy: option.value})}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                          filters.sortBy === option.value
+                        onClick={() => setFilters({ ...filters, sortBy: option.value })}
+                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${filters.sortBy === option.value
                             ? "bg-emerald-600 text-white"
                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                        }`}
+                          }`}
                       >
                         <Icon size={16} />
                         {option.label}
@@ -412,7 +411,7 @@ const DiscussList = () => {
                   <input
                     type="checkbox"
                     checked={filters.showPinned}
-                    onChange={(e) => setFilters({...filters, showPinned: e.target.checked})}
+                    onChange={(e) => setFilters({ ...filters, showPinned: e.target.checked })}
                     className="rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-emerald-500"
                   />
                   <span className="flex items-center gap-1">
@@ -433,11 +432,10 @@ const DiscussList = () => {
                     <button
                       key={tag}
                       onClick={() => handleTagClick(tag)}
-                      className={`px-3 py-1 text-sm rounded-full transition-colors ${
-                        filters.tag === tag
+                      className={`px-3 py-1 text-sm rounded-full transition-colors ${filters.tag === tag
                           ? "bg-emerald-600 text-white"
                           : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-                      }`}
+                        }`}
                     >
                       {tag}
                     </button>
@@ -488,7 +486,7 @@ const DiscussList = () => {
                       <Tag size={12} />
                       {filters.tag}
                       <button
-                        onClick={() => setFilters({...filters, tag: ""})}
+                        onClick={() => setFilters({ ...filters, tag: "" })}
                         className="ml-1 hover:text-red-500"
                       >
                         ×
@@ -518,7 +516,7 @@ const DiscussList = () => {
                   </h2>
                   <div className="space-y-4">
                     {pinnedDiscussions.map((discussion) => (
-                      <DiscussionCard 
+                      <DiscussionCard
                         key={discussion._id}
                         discussion={discussion}
                         onVote={handleVote}
@@ -537,12 +535,12 @@ const DiscussList = () => {
               {/* All Discussions */}
               <div>
                 <h2 className="text-xl font-bold mb-4">
-                  {filters.sortBy === "top" ? "Top Discussions" : 
-                   filters.sortBy === "most_upvoted" ? "Most Upvoted" :
-                   filters.sortBy === "controversial" ? "Controversial Discussions" : 
-                   "Recent Discussions"}
+                  {filters.sortBy === "top" ? "Top Discussions" :
+                    filters.sortBy === "most_upvoted" ? "Most Upvoted" :
+                      filters.sortBy === "controversial" ? "Controversial Discussions" :
+                        "Recent Discussions"}
                 </h2>
-                
+
                 {discussions.length === 0 ? (
                   <div className="col-span-2 text-center py-12">
                     <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -560,7 +558,7 @@ const DiscussList = () => {
                 ) : (
                   <div className="space-y-4">
                     {discussions.map((discussion) => (
-                      <DiscussionCard 
+                      <DiscussionCard
                         key={discussion._id}
                         discussion={discussion}
                         onVote={handleVote}
@@ -579,20 +577,20 @@ const DiscussList = () => {
                 {pagination.totalPages > 1 && (
                   <div className="flex justify-center items-center gap-4 mt-8">
                     <button
-                      onClick={() => setPagination({...pagination, page: pagination.page - 1})}
+                      onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
                       disabled={!pagination.hasPrevPage}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors"
                     >
                       <ChevronRight className="rotate-180" size={16} />
                       Previous
                     </button>
-                    
+
                     <span className="text-gray-600 dark:text-gray-300">
                       Page {pagination.page} of {pagination.totalPages}
                     </span>
-                    
+
                     <button
-                      onClick={() => setPagination({...pagination, page: pagination.page + 1})}
+                      onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
                       disabled={!pagination.hasNextPage}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors"
                     >
@@ -613,9 +611,9 @@ const DiscussList = () => {
 // Discussion Card Component
 const DiscussionCard = ({ discussion, onVote, onPin, voting, isAuthenticated, user, formatDate, getScoreColor }) => {
   const navigate = useNavigate();
-  
+
   return (
-    <div 
+    <div
       onClick={() => navigate(`/discuss/${discussion._id}`)}
       className="bg-white/70 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-5 backdrop-blur hover:shadow-lg transition-shadow cursor-pointer group"
     >
@@ -625,40 +623,37 @@ const DiscussionCard = ({ discussion, onVote, onPin, voting, isAuthenticated, us
           <button
             onClick={(e) => onVote(discussion._id, "upvote", e)}
             disabled={voting[discussion._id] || !isAuthenticated}
-            className={`p-2 rounded-full transition-colors ${
-              discussion.userVote === "upvote"
+            className={`p-2 rounded-full transition-colors ${discussion.userVote === "upvote"
                 ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"
                 : "hover:bg-gray-100 dark:hover:bg-gray-800"
-            } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+              } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             <ThumbsUp size={18} />
           </button>
-          
+
           <div className={`my-2 text-lg font-bold ${getScoreColor(discussion.score)}`}>
             {discussion.score > 0 ? "+" : ""}{discussion.score}
           </div>
-          
+
           <button
             onClick={(e) => onVote(discussion._id, "downvote", e)}
             disabled={voting[discussion._id] || !isAuthenticated}
-            className={`p-2 rounded-full transition-colors ${
-              discussion.userVote === "downvote"
+            className={`p-2 rounded-full transition-colors ${discussion.userVote === "downvote"
                 ? "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"
                 : "hover:bg-gray-100 dark:hover:bg-gray-800"
-            } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+              } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             <ThumbsDown size={18} />
           </button>
-          
+
           {/* Pin Button (Admin only) */}
           {isAuthenticated && user?.role === "admin" && (
             <button
               onClick={(e) => onPin(discussion._id, e)}
-              className={`mt-3 p-1 rounded-full transition-colors ${
-                discussion.isPinned
+              className={`mt-3 p-1 rounded-full transition-colors ${discussion.isPinned
                   ? "text-yellow-600 dark:text-yellow-400"
                   : "text-gray-400 hover:text-yellow-500"
-              }`}
+                }`}
             >
               <Pin size={16} />
             </button>
@@ -681,7 +676,7 @@ const DiscussionCard = ({ discussion, onVote, onPin, voting, isAuthenticated, us
                   {discussion.title}
                 </h3>
               </div>
-              
+
               {/* Tags */}
               {discussion.tags && discussion.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -701,7 +696,7 @@ const DiscussionCard = ({ discussion, onVote, onPin, voting, isAuthenticated, us
                 </div>
               )}
             </div>
-            
+
             {/* Vote Stats */}
             <div className="flex items-center gap-4 text-sm text-gray-500 mt-2 sm:mt-0">
               <span className="flex items-center gap-1">
@@ -736,7 +731,7 @@ const DiscussionCard = ({ discussion, onVote, onPin, voting, isAuthenticated, us
                 <span className="text-sm">{formatDate(discussion.createdAt)}</span>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(`/discuss/${discussion._id}`)}
