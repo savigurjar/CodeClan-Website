@@ -23,12 +23,11 @@ import AdminVideo from "./Components/Admin/AdminVideo";
 import AdminUpload from "./Components/Admin/AdminUpload";
 import AdminUpdate from "./Components/Admin/AdminUpdate";
 import Tutorials from "./pages/NavLinks/Tutorials";
-import AdminCreateContest from "./Components/Admin/CreateContest";
-
 // // 🔥 DISCUSS IMPORTS
 import DiscussList from "./pages/DiscussionList";
 import DiscussDetails from "./pages/DiscussionPage";
 import DiscussCreate from "./pages/DiscussionCreate";
+import ContestManager from "./Components/Admin/AdminContest";
 
 function App() {
   const dispatch = useDispatch();
@@ -85,7 +84,7 @@ function App() {
       />
 
       <Route
-        path="/admin/create/:id"
+        path="/admin/create"
         element={
           isAuthenticated && user?.role === "admin" ? (
             <CreateProblem />
@@ -139,10 +138,10 @@ function App() {
         }
       />
       <Route
-        path="/admin/create-contest"
+        path="/admin/contest"
         element={
           isAuthenticated && user?.role === "admin" ? (
-            <AdminCreateContest />
+            <ContestManager/>
           ) : (
             <Navigate to="/" />
           )
