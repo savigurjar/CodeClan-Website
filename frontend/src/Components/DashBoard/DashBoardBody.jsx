@@ -1433,7 +1433,7 @@ const Dashboard = () => {
                           {problem._id && (
                             <button
                               onClick={() => window.location.href = `/problem/${problem._id}`}
-                              className="px-4 py-2 text-sm bg-emerald-500/10 text-emerald-600 dark:text-emerald-900 rounded-lg hover:bg-emerald-500/20 transition-colors opacity-0 group-hover:opacity-100"
+                              className="px-4 py-2 text-sm bg-emerald-500/10 text-emerald-600 dark:text-emerald-600 rounded-lg hover:bg-emerald-500/20 transition-colors opacity-0 group-hover:opacity-100"
                             >
                               View
                             </button>

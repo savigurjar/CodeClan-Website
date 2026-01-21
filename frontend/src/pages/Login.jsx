@@ -65,7 +65,7 @@ const Login = () => {
       >
         {/* Heading */}
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold mb-2">Sign in to CodeClan</h1>
+          <h1 className="text-3xl font-bold mb-2">Sign in to <span className="text-emerald-700">CodeClan</span></h1>
           <p className="text-gray-300">Enter your details to access your account</p>
         </div>
 

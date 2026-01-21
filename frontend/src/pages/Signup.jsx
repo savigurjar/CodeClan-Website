@@ -94,7 +94,7 @@ const Signup = () => {
         animate="visible"
         className="relative z-10 bg-white/10 backdrop-blur-xl p-8 rounded-2xl w-full max-w-md text-white border border-white/10"
       >
-        <h1 className="text-2xl font-bold mb-1">Become a Part of CodeClan</h1>
+        <h1 className="text-2xl font-bold mb-1">Become a Part of <span className="text-emerald-700">CodeClan</span></h1>
         <p className="mb-6 text-gray-300">
           Sign up today and begin your coding journey!
         </p>

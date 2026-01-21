@@ -23,6 +23,20 @@ const tutorials = [
     meta: "Beginner → Advanced",
     link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFu4ovJ41PywklqI7IyXwr01",
   },
+    {
+    title: "Algorithm Mastery",
+    image: abdulbari,
+    desc: "Master algorithms and problem-solving",
+    meta: "Advanced Concepts",
+    link: "https://www.youtube.com/playlist?list=PLfqBHhcvlW7-SOGCl7TJxZ4426qBCmCpc",
+  },
+  {
+    title: "Operating System",
+    image: operating,
+    desc: "Understand OS internals and processes",
+    meta: "Core Concepts",
+    link: "https://www.youtube.com/playlist?list=PLDzeHZWIZsTr3nwuTegHLa2qlI81QweYG",
+  },
   {
     title: "System Design",
     image: systemDesign,
@@ -44,20 +58,7 @@ const tutorials = [
     meta: "Core Concepts",
     link: "https://www.youtube.com/playlist?list=PLQEaRBV9gAFuf-27K64l7-hV7o0fr9zx7",
   },
-  {
-    title: "Algorithm Mastery",
-    image: abdulbari,
-    desc: "Master algorithms and problem-solving",
-    meta: "Advanced Concepts",
-    link: "https://www.youtube.com/playlist?list=PLfqBHhcvlW7-SOGCl7TJxZ4426qBCmCpc",
-  },
-  {
-    title: "Operating System",
-    image: operating,
-    desc: "Understand OS internals and processes",
-    meta: "Core Concepts",
-    link: "https://www.youtube.com/playlist?list=PLDzeHZWIZsTr3nwuTegHLa2qlI81QweYG",
-  },
+
 ];
 
   const stats = [

@@ -120,23 +120,20 @@ const ProblemPage = () => {
         }
     };
 
-   if (loading) {
-  return (
-   <AppLayout>
-     <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="flex flex-col items-center bg-green-50 border border-green-200 rounded-2xl p-8 shadow-lg">
-        {/* Spinner */}
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 mb-4"></div>
-        {/* Message */}
-        <p className="text-green-900 font-semibold text-lg">
-          Loading problem...
-        </p>
+ if (loading) {
+    return (
+     <AppLayout>
+       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="flex flex-col items-center bg-green-50 dark:bg-emerald-900 border border-green-200 dark:border-emerald-700 rounded-2xl p-8 shadow-lg">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-900 dark:border-emerald-400 mb-4"></div>
+          <p className="text-green-900 dark:text-emerald-400 font-semibold text-lg">
+            Loading Problem...
+          </p>
+        </div>
       </div>
-    </div>
-   </AppLayout>
-  );
-}
-
+     </AppLayout>
+    );
+  }
 
     if (!problem)
         return (
