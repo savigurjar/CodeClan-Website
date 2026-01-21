@@ -45,11 +45,27 @@ const submitCode = async (req, res) => {
 
     const testResult = judgeResults.map((test, i) => {
       let tcStatus = test.status_id;
-      if (tcStatus === 3) testCasesPassed++;
+      if (tcStatus === 3) {
+        testCasesPassed++;
+      } else {
+        // Map Judge0 status codes to your application status
+        if (tcStatus === 4) { // Wrong Answer
+          status = "wrong";
+        } else if (tcStatus === 5) { // Time Limit Exceeded
+          status = "error";
+        } else if (tcStatus === 6) { // Compilation Error
+          status = "error";
+        } else if (tcStatus === 7) { // Runtime Error
+          status = "error";
+        } else if (tcStatus === 8) { // Memory Limit Exceeded
+          status = "error";
+        } else {
+          status = "error"; // For any other error
+        }
+      }
+      
       runtime += parseFloat(test.time || 0);
       memory = Math.max(memory, test.memory || 0);
-
-      if (![3].includes(tcStatus)) status = "failed";
 
       return {
         stdin: problem.hiddenTestCases[i].input,
@@ -67,6 +83,13 @@ const submitCode = async (req, res) => {
     submittedResult.testCasesPassed = testCasesPassed;
     submittedResult.runtime = runtime;
     submittedResult.memory = memory;
+    
+    // Add error message if any test case has an error
+    const errorTest = testResult.find(t => t.error);
+    if (errorTest) {
+      submittedResult.errorMessage = errorTest.error;
+    }
+    
     await submittedResult.save();
 
     // UPDATE USER STATS IF PROBLEM SOLVED
@@ -85,6 +108,7 @@ const submitCode = async (req, res) => {
 
     res.status(201).json({
       accepted: status === "accepted",
+      status: status, // Send status to frontend
       totalTestCases: submittedResult.testCasesTotal,
       passedTestCases: testCasesPassed,
       runtime,

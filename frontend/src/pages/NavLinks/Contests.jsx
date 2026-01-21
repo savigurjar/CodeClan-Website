@@ -88,33 +88,42 @@ const ContestsPage = () => {
   };
 
   if (loading) {
-    return (
-      <AppLayout>
-        <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-          {/* 🌌 Animated Background (dark only) */}
-          <div className="hidden dark:block">
-            <Animate />
-          </div>
-          
-          <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                <div className="w-20 h-20 border-4 border-emerald-400/30 rounded-full"></div>
-                <div className="absolute inset-0 w-20 h-20 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
-                <Trophy className="absolute inset-0 m-auto w-8 h-8 text-emerald-400" />
+      return (
+        <AppLayout>
+          <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
+            {/* 🌌 Animated Background (dark only) */}
+            <div className="hidden dark:block">
+              <Animate />
+            </div>
+            
+            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  {/* Light mode: emerald-900, Dark mode: emerald-400/30 */}
+                  <div className="w-20 h-20 border-4 border-emerald-900/30 rounded-full dark:border-emerald-400/30"></div>
+                  
+                  {/* Light mode: emerald-900, Dark mode: emerald-400 */}
+                  <div className="absolute inset-0 w-20 h-20 border-4 border-emerald-900 border-t-transparent rounded-full animate-spin dark:border-emerald-400 dark:border-t-transparent"></div>
+                  
+                  {/* Light mode: emerald-900, Dark mode: emerald-400 */}
+                  <Trophy className="absolute inset-0 m-auto w-8 h-8 text-emerald-900 dark:text-emerald-400" />
+                </div>
+                
+                {/* Light mode: emerald-900, Dark mode: emerald-400 */}
+                <p className="mt-6 text-lg font-medium text-emerald-900 dark:text-emerald-400">
+                  Loading contests...
+                </p>
+                
+                {/* Light mode: black with opacity, Dark mode: white with opacity */}
+                <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+                  Preparing your competition dashboard
+                </p>
               </div>
-              <p className="mt-6 text-lg font-medium text-[#021510] dark:text-emerald-400">
-                Loading contests...
-              </p>
-              <p className="mt-2 text-sm text-black/60 dark:text-white/60">
-                Preparing your competition dashboard
-              </p>
             </div>
           </div>
-        </div>
-      </AppLayout>
-    );
-  }
+        </AppLayout>
+      );
+    }
 
   return (
     <AppLayout>
