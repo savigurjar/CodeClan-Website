@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Edit, Trash2, Video, ArrowLeft, Trophy } from "lucide-react";
+import { Plus, Edit, Trash2, Video, ArrowLeft, Trophy,User2Icon } from "lucide-react";
 import { NavLink, useNavigate } from "react-router";
 import Animate from "../../animate";
 
@@ -38,6 +38,13 @@ const adminOptions = [
     description: "Create and manage coding contests",
     icon: Trophy,
     route: "/admin/contest",
+  },
+  {
+    id: "users",
+    title: "All Users",
+    description: "View and manage all users",
+    icon: User2Icon,
+    route: "/admin/users",
   },
 ];
 

@@ -111,7 +111,8 @@ const userSchema = new Schema({
     totalActiveDays: {
         type: Number,
         default: 0
-    }
+    },
+    
 
 }, { timestamps: true });
 

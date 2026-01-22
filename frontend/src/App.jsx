@@ -31,6 +31,7 @@ import ContestManager from "./Components/Admin/AdminContest";
 import Animate from "./animate";
 import AppLayout from "./Components/AppLayout";
 import { MessagesSquare } from 'lucide-react';
+import AdminAllUsers from "./Components/Admin/AdminAllUsers";
 
 function App() {
   const dispatch = useDispatch();
@@ -193,6 +194,16 @@ function App() {
         element={
           isAuthenticated && user?.role === "admin" ? (
             <AdminUpload />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          isAuthenticated && user?.role === "admin" ? (
+            <AdminAllUsers />
           ) : (
             <Navigate to="/" />
           )
