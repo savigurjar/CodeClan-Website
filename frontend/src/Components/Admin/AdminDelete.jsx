@@ -299,46 +299,50 @@ const AdminDelete = () => {
           </div>
 
           {/* Search and Filters Bar */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Search Input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search problems to delete..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-700 
-                    rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
-                    outline-none transition text-gray-900 dark:text-white"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
 
-              {/* Difficulty Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Filter by Difficulty
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {difficultyOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => setSelectedDifficulty(option)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors
-                        ${selectedDifficulty === option
-                          ? 'bg-red-500 text-white'
-                          : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+    {/* Search Input */}
+    <div className="relative">
+      <Search
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        size={20}
+      />
+      <input
+        type="text"
+        placeholder="Search problems to delete..."
+        className="w-full h-[44px] pl-10 pr-4 bg-gray-50 dark:bg-gray-900 
+          border border-gray-200 dark:border-gray-700 
+          rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
+          outline-none transition text-gray-900 dark:text-white"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+    </div>
+
+    {/* Difficulty Filter */}
+    <div>
+      {/* Optional: label hata diya for alignment */}
+      <div className="flex flex-wrap gap-2">
+        {difficultyOptions.map((option) => (
+          <button
+            key={option}
+            onClick={() => setSelectedDifficulty(option)}
+            className={`h-[44px] px-4 rounded-lg text-sm font-medium transition-colors
+              ${selectedDifficulty === option
+                ? 'bg-red-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
         </div>
 
         {/* Problems Table */}

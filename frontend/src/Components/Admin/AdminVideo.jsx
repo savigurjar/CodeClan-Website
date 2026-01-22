@@ -267,57 +267,61 @@ const AdminVideo = () => {
 
           {/* Search and Filters Bar */}
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Search Input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search problems by title, ID, or tags..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-700 
-                    rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
-                    outline-none transition text-gray-900 dark:text-white"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
 
-              {/* Status Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Filter by Status
-                </label>
-                <select
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-700 
-                    rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
-                    outline-none transition text-gray-900 dark:text-white"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+    {/* Search Input */}
+    <div className="relative">
+      <Search
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        size={20}
+      />
+      <input
+        type="text"
+        placeholder="Search problems by title, ID, or tags..."
+        className="w-full h-[44px] pl-10 pr-4 bg-gray-50 dark:bg-gray-900 
+          border border-gray-200 dark:border-gray-700 
+          rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
+          outline-none transition text-gray-900 dark:text-white"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+    </div>
 
-              {/* Upload Button */}
-              <div className="flex items-end">
-                <button
-                  onClick={() => navigate("/admin/upload/new")}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5
-                    bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600
-                    text-white font-medium rounded-lg transition-all hover:shadow-lg"
-                >
-                  <Upload size={18} />
-                  Upload New Video
-                </button>
-              </div>
-            </div>
-          </div>
+    {/* Status Filter */}
+    <div>
+      <select
+        className="w-full h-[44px] px-4 bg-gray-50 dark:bg-gray-900 
+          border border-gray-200 dark:border-gray-700 
+          rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 
+          outline-none transition text-gray-900 dark:text-white"
+        value={statusFilter}
+        onChange={(e) => setStatusFilter(e.target.value)}
+      >
+        {statusOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Upload Button */}
+    <div>
+      <button
+        onClick={() => navigate("/admin/upload/new")}
+        className="w-full h-[44px] inline-flex items-center justify-center gap-2
+          bg-gradient-to-r from-purple-500 to-indigo-500
+          hover:from-purple-600 hover:to-indigo-600
+          text-white font-medium rounded-lg transition-all hover:shadow-lg"
+      >
+        <Upload size={18} />
+        Upload New Video
+      </button>
+    </div>
+
+  </div>
+</div>
+
         </div>
 
         {/* Video Management Table */}

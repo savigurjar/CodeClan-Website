@@ -177,52 +177,61 @@ const DeleteContest = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          <input
-            type="text"
-            placeholder="Search contests to delete..."
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-              border border-gray-200 dark:border-gray-700 
-              rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
-              outline-none transition text-gray-900 dark:text-white"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-end">
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Filter by Status
-          </label>
-          <select
-            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-              border border-gray-200 dark:border-gray-700 
-              rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
-              outline-none transition text-gray-900 dark:text-white"
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-          >
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
+  {/* Search */}
+  <div className="relative">
+    <Search
+      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+      size={20}
+    />
+    <input
+      type="text"
+      placeholder="Search contests to delete..."
+      className="w-full h-[44px] pl-10 pr-4 bg-gray-50 dark:bg-gray-900 
+        border border-gray-200 dark:border-gray-700 
+        rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
+        outline-none transition text-gray-900 dark:text-white"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
 
-        <div className="flex items-end">
-          <button
-            onClick={fetchContests}
-            className="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 
-              text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <Filter size={16} />
-            Apply Filters
-          </button>
-        </div>
-      </div>
+  {/* Status Filter */}
+  <div>
+    {/* label removed for alignment */}
+    <select
+      className="w-full h-[44px] px-4 bg-gray-50 dark:bg-gray-900 
+        border border-gray-200 dark:border-gray-700 
+        rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 
+        outline-none transition text-gray-900 dark:text-white"
+      value={filterStatus}
+      onChange={(e) => setFilterStatus(e.target.value)}
+    >
+      {statusOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Apply Button */}
+  <div>
+    <button
+      onClick={fetchContests}
+      className="w-full h-[44px] px-4 bg-gray-100 dark:bg-gray-800 
+        hover:bg-gray-200 dark:hover:bg-gray-700 
+        text-gray-700 dark:text-gray-300 font-medium 
+        rounded-lg transition-colors flex items-center justify-center gap-2"
+    >
+      <Filter size={16} />
+      Apply Filters
+    </button>
+  </div>
+
+</div>
+
 
       {/* Contests List */}
       <div className="space-y-4 mb-6">

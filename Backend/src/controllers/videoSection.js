@@ -76,7 +76,7 @@ const saveVideoMetadata = async (req, res) => {
       duration: cloudinaryResource.duration || duration,
       thumbnailUrl,
       title: problem.title, // ✅ Use problem title
-      status: 'pending',
+      status: 'approved',
       views: 0,
       likes: 0,
       commentsCount: 0

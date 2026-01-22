@@ -184,67 +184,69 @@ const AdminUpdate = () => {
           </div>
 
           {/* Search and Filters Bar */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Search Input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search problems by title, ID, difficulty, or tags..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-700 
-                    rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                    outline-none transition text-gray-900 dark:text-white"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
 
-              {/* Difficulty Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Difficulty
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {difficultyOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => setSelectedDifficulty(option)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors
-                        ${selectedDifficulty === option
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
+    {/* Search Input */}
+    <div className="relative">
+      <Search
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        size={20}
+      />
+      <input
+        type="text"
+        placeholder="Search problems by title, ID, difficulty, or tags..."
+        className="w-full h-[44px] pl-10 pr-4 bg-gray-50 dark:bg-gray-900 
+          border border-gray-200 dark:border-gray-700 
+          rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+          outline-none transition text-gray-900 dark:text-white"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+    </div>
 
-              {/* Sort Dropdown */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Sort By
-                </label>
-                <select
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 
-                    border border-gray-200 dark:border-gray-700 
-                    rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                    outline-none transition text-gray-900 dark:text-white"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
+    {/* Difficulty Filter */}
+    <div>
+      {/* label removed for alignment */}
+      <div className="flex flex-wrap gap-2">
+        {difficultyOptions.map((option) => (
+          <button
+            key={option}
+            onClick={() => setSelectedDifficulty(option)}
+            className={`h-[44px] px-4 rounded-lg text-sm font-medium transition-colors
+              ${selectedDifficulty === option
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Sort Dropdown */}
+    <div>
+      {/* label removed for alignment */}
+      <select
+        className="w-full h-[44px] px-4 bg-gray-50 dark:bg-gray-900 
+          border border-gray-200 dark:border-gray-700 
+          rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+          outline-none transition text-gray-900 dark:text-white"
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+      >
+        {sortOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+
+  </div>
+</div>
+
         </div>
 
         {/* Problems Table */}
