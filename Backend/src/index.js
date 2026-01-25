@@ -22,7 +22,8 @@ const discussRouter = require("./routes/discussRoute");
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // frontend URL
+    origin: "https://codeclan.onrender.com", // frontend URL
+    // origin: 'http://localhost:5173', // frontend URL
     credentials: true,
 }));
 app.use(express.json());
