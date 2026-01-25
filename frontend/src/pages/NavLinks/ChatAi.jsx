@@ -84,7 +84,7 @@ function ChatAi({ problem }) {
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 dark:border-white/10">
           <h2 className="text-lg font-extrabold text-gray-900 dark:text-emerald-400">
-            🤖 DSA AI Mentor
+            🤖 Problem Solver AI Mentor
           </h2>
           <p className="text-sm text-gray-500 dark:text-white/60">
             Get hints, logic explanations & optimized approaches
