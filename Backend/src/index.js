@@ -22,7 +22,8 @@ const discussRouter = require("./routes/discussRoute");
 
 // Middleware
 app.use(cors({
-    origin: "https://codeclan.onrender.com", // frontend URL
+    origin: "https://codeclan-sigma.vercel.app", // frontend URL
+    // origin: "https://codeclan.onrender.com", // frontend URL
     // origin: 'http://localhost:5173', // frontend URL
     credentials: true,
 }));
