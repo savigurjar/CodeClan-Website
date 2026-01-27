@@ -24,6 +24,8 @@ const register = async (req, res) => {
   try {
     await validUser(req.body);
 
+      delete req.body.confirmPassword; 
+
     req.body.password = await bcrypt.hash(req.body.password, 10);
     req.body.role = "user";
    
