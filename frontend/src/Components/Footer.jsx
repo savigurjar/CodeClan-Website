@@ -27,17 +27,17 @@ const Footer = () => {
           {/* SOCIALS */}
          <div className="flex gap-4 mt-6 items-center">
   {/* GitHub */}
-  <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/savigurjar" target="_blank" rel="noopener noreferrer">
     <FaGithub className="text-2xl text-white/70 hover:text-emerald-700 cursor-pointer transition" />
   </a>
 
   {/* LinkedIn */}
-  <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.linkedin.com/in/savi-g-2b669721a/" target="_blank" rel="noopener noreferrer">
     <FaLinkedin className="text-2xl text-white/70 hover:text-emerald-700 cursor-pointer transition" />
   </a>
 
   {/* X (Twitter rebranded) */}
-  <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer">
+  <a href="https://x.com/savita_gurjar30" target="_blank" rel="noopener noreferrer">
     <span className="text-2xl font-bold text-white/70 hover:text-emerald-700 cursor-pointer transition">
       X
     </span>
@@ -50,7 +50,7 @@ const Footer = () => {
         <div>
           <h3 className="text-xl font-semibold mb-4 text-white">Quick Links</h3>
           <ul className="space-y-2 text-white/70">
-            {["Practice Problems", "Contests", "Discuss", "Tutorials", "Interview Prep"].map((link) => (
+            {["problems", "contests", "discuss", "tutorials", "ask"].map((link) => (
               <li
                 key={link}
                 className="hover:text-emerald-700 transition cursor-pointer"
@@ -80,7 +80,7 @@ const Footer = () => {
             <li className="flex items-center gap-2">
               <MdLocationOn className="text-white w-5 h-5" />
               <a
-                href="https://www.google.com/maps/place/Mumbai,+India"
+                  href="https://www.google.com/maps/place/MadhyaPradesh,+India"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-emerald-700 transition"
