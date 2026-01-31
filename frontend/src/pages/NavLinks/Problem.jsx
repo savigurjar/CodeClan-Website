@@ -492,7 +492,7 @@ const ProblemsPage = () => {
         <div className="flex justify-center items-center gap-4 mb-12 relative">
           {/* Previous Button */}
           <button
-            className="px-4 py-2 rounded-lg border border-gray-300 text-[#021510] bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-900 dark:text-white dark:border-emerald-700 dark:hover:bg-emerald-800 transition"
+            className="px-4 py-2 rounded-lg border border-gray-300 text-white bg-emerald-900 hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-900 dark:text-white dark:border-emerald-700 dark:hover:bg-emerald-800 transition"
             onClick={() => prevPage && setCurrentPage(prevPage)}
             disabled={!prevPage}
           >
@@ -506,7 +506,7 @@ const ProblemsPage = () => {
 
           {/* Next Button */}
           <button
-            className="px-4 py-2 relative rounded-lg border border-gray-300 text-[#021510] bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-900 dark:text-white dark:border-emerald-700 dark:hover:bg-emerald-800 transition"
+            className="px-4 py-2 relative rounded-lg border border-gray-300 text-white bg-emerald-900 hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-900 dark:text-white dark:border-emerald-700 dark:hover:bg-emerald-800 transition"
             onClick={() => nextPage && setCurrentPage(nextPage)}
             disabled={!nextPage}
           >
