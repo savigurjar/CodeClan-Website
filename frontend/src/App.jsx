@@ -32,6 +32,7 @@ import Animate from "./animate";
 import AppLayout from "./Components/AppLayout";
 import { MessagesSquare } from 'lucide-react';
 import AdminAllUsers from "./Components/Admin/AdminAllUsers";
+// import ChatRoom from "./pages/NavLinks/ChatRoom"
 
 function App() {
   const dispatch = useDispatch();
@@ -198,6 +199,16 @@ function App() {
           )
         }
       />
+      {/* <Route
+        path="/chatbot"
+        element={
+          // isAuthenticated && user?.role === "admin" ? (
+            <ChatRoom />
+          // ) : (
+            // <Navigate to="/" />
+          // )
+        }
+      /> */}
 
       {/* DISCUSS (BLOGS) */}
       <Route path="/discuss" element={<DiscussList />} />
@@ -224,6 +235,7 @@ function App() {
       <Route path="/chat" element={<ChatAi />} />
       <Route path="/ask" element={<Ask />} />
       <Route path="/problem/:problemId" element={<ProblemPage />} />
+     
     </Routes>
   );
 }

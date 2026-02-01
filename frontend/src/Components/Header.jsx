@@ -54,7 +54,7 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {["problems", "contests", "tutorials", "discuss", "ask"].map((p) => (
+          {["problems", "contests", "tutorials", "discuss", "ask","chat"].map((p) => (
             <Link
               key={p}
               to={`/${p}`}
