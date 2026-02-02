@@ -32,7 +32,7 @@ import Animate from "./animate";
 import AppLayout from "./Components/AppLayout";
 import { MessagesSquare } from 'lucide-react';
 import AdminAllUsers from "./Components/Admin/AdminAllUsers";
-// import ChatRoom from "./pages/NavLinks/ChatRoom"
+import ChatRoom from "./pages/NavLinks/ChatRoom"
 
 function App() {
   const dispatch = useDispatch();
@@ -46,41 +46,41 @@ function App() {
   }, [dispatch]);
 
 
-       if (loading) {
+  if (loading) {
     return (
-      
-        <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-          {/* 🌌 Animated Background (dark only) */}
-          <div className="hidden dark:block">
-            <Animate />
-          </div>
-          
-          <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-            <div className="flex flex-col items-center">
-              <div className="relative">
-                {/* Light mode: emerald-900, Dark mode: emerald-400/30 */}
-                <div className="w-20 h-20 border-4 border-emerald-900/30 rounded-full dark:border-emerald-400/30"></div>
-                
-                {/* Light mode: emerald-900, Dark mode: emerald-400 */}
-                <div className="absolute inset-0 w-20 h-20 border-4 border-emerald-900 border-t-transparent rounded-full animate-spin dark:border-emerald-400 dark:border-t-transparent"></div>
-                
-                {/* Light mode: emerald-900, Dark mode: emerald-400 */}
-                <MessagesSquare className="absolute inset-0 m-auto w-8 h-8 text-emerald-900 dark:text-emerald-400" />
-              </div>
-              
+
+      <div className="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
+        {/* 🌌 Animated Background (dark only) */}
+        <div className="hidden dark:block">
+          <Animate />
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              {/* Light mode: emerald-900, Dark mode: emerald-400/30 */}
+              <div className="w-20 h-20 border-4 border-emerald-900/30 rounded-full dark:border-emerald-400/30"></div>
+
               {/* Light mode: emerald-900, Dark mode: emerald-400 */}
-              <p className="mt-6 text-lg font-medium text-emerald-900 dark:text-emerald-400">
-              Loading ...
-              </p>
-              
-              {/* Light mode: black with opacity, Dark mode: white with opacity */}
-              <p className="mt-2 text-sm text-black/60 dark:text-white/60">
-                Preparing the best experience for you.
-              </p>
+              <div className="absolute inset-0 w-20 h-20 border-4 border-emerald-900 border-t-transparent rounded-full animate-spin dark:border-emerald-400 dark:border-t-transparent"></div>
+
+              {/* Light mode: emerald-900, Dark mode: emerald-400 */}
+              <MessagesSquare className="absolute inset-0 m-auto w-8 h-8 text-emerald-900 dark:text-emerald-400" />
             </div>
+
+            {/* Light mode: emerald-900, Dark mode: emerald-400 */}
+            <p className="mt-6 text-lg font-medium text-emerald-900 dark:text-emerald-400">
+              Loading ...
+            </p>
+
+            {/* Light mode: black with opacity, Dark mode: white with opacity */}
+            <p className="mt-2 text-sm text-black/60 dark:text-white/60">
+              Preparing the best experience for you.
+            </p>
           </div>
         </div>
-      
+      </div>
+
     );
   }
 
@@ -172,7 +172,7 @@ function App() {
         path="/admin/contest"
         element={
           isAuthenticated && user?.role === "admin" ? (
-            <ContestManager/>
+            <ContestManager />
           ) : (
             <Navigate to="/" />
           )
@@ -199,16 +199,16 @@ function App() {
           )
         }
       />
-      {/* <Route
-        path="/chatbot"
+      <Route
+        path="/connect"
         element={
-          // isAuthenticated && user?.role === "admin" ? (
+          isAuthenticated && user?.role === "admin" ? (
             <ChatRoom />
-          // ) : (
-            // <Navigate to="/" />
-          // )
+          ) : (
+            <Navigate to="/" />
+          )
         }
-      /> */}
+      />
 
       {/* DISCUSS (BLOGS) */}
       <Route path="/discuss" element={<DiscussList />} />
@@ -235,7 +235,7 @@ function App() {
       <Route path="/chat" element={<ChatAi />} />
       <Route path="/ask" element={<Ask />} />
       <Route path="/problem/:problemId" element={<ProblemPage />} />
-     
+
     </Routes>
   );
 }
