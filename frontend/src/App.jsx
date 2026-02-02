@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate ,Link} from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 
@@ -33,6 +33,9 @@ import AppLayout from "./Components/AppLayout";
 import { MessagesSquare } from 'lucide-react';
 import AdminAllUsers from "./Components/Admin/AdminAllUsers";
 import ChatRoom from "./pages/NavLinks/ChatRoom"
+import {  Shield } from "lucide-react";
+import ChatRoomAdmin from "./pages/NavLinks/ChatRoomAdmin";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -199,7 +202,7 @@ function App() {
           )
         }
       />
-      <Route
+      {/* <Route
         path="/connect"
         element={
           isAuthenticated && user?.role === "admin" ? (
@@ -208,7 +211,22 @@ function App() {
             <Navigate to="/" />
           )
         }
-      />
+      /> */}
+
+      <Route
+  path="/connect"
+  element={
+    isAuthenticated ? (
+      user?.role === "admin" ? (
+        <ChatRoom />
+      ) : (
+       <ChatRoomAdmin/>
+      )
+    ) : (
+      <Navigate to="/" />
+    )
+  }
+/>
 
       {/* DISCUSS (BLOGS) */}
       <Route path="/discuss" element={<DiscussList />} />
