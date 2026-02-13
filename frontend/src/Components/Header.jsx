@@ -54,7 +54,7 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {["problems", "contests", "tutorials", "discuss", "ask", "connect"].map((p) => (
+          {["problems", "contests", "tutorials", "discuss", "ask"].map((p) => (
             <Link
               key={p}
               to={`/${p}`}
@@ -148,7 +148,7 @@ function Header() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden border-t bg-white dark:bg-[#020f0b] p-4 space-y-3 transition-all duration-300 ease-in-out">
-          {["problems", "contests", "tutorials", "discuss", "ask","connect"].map((p) => (
+          {["problems", "contests", "tutorials", "discuss", "ask"].map((p) => (
             <Link
               key={p}
               to={`/${p}`}
